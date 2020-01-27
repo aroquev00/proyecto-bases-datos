@@ -5,18 +5,11 @@
 -- medicamento
 -- receta
 
-CREATE TABLE medicamento (
+CREATE TABLE medicamento ( 
     medicamentoID INT,
     nombre VARCHAR(20),
     presentacion VARCHAR(50),
     PRIMARY KEY (medicamentoID)
-);
-
-CREATE TABLE reportan (
-    consultaID INT,
-    sintomaID INT,
-    FOREIGN KEY (consultaID) REFERENCES Consulta(consultaID),
-    FOREIGN KEY (sintomaID) REFERENCES Sintoma(sintomaID)
 );
 
 CREATE TABLE consultaRecetaMedicamento (
@@ -113,8 +106,9 @@ CREATE TABLE Consulta(
   notaClinica varchar(500),
   peea varchar(500),
   PRIMARY KEY (visitaID),
-  FOREIGN KEY(numeroPoliza) REFERENCES SeguroMedico(numeroPoliza),FOREIGN KEY(doctorID) REFERENCES Doctor(doctorID)
-;)
+  FOREIGN KEY(numeroPoliza) REFERENCES SeguroMedico(numeroPoliza),
+  FOREIGN KEY(doctorID) REFERENCES Doctor(doctorID)
+);
 
 CREATE TABLE Doctor(
   doctorID int,
@@ -122,4 +116,53 @@ CREATE TABLE Doctor(
   nombre varchar(20),
   apellido varchar(20)
   PRIMARY KEY(doctorID)
+);
+
+CREATE TABLE reportan (
+    consultaID INT,
+    sintomaID INT,
+    FOREIGN KEY (consultaID) REFERENCES Consulta(consultaID),
+    FOREIGN KEY (sintomaID) REFERENCES Sintoma(sintomaID)
+);
+
+CREATE TABLE Examen (
+examenID INT,
+tipo CHAR,
+fechaEmision DateTime,
+nombre VARCHAR(15),
+PRIMARY KEY(examenID)
+); 
+
+CREATE TABLE tieneExamen (
+examenID INT,
+historialID INT,
+PRIMARY KEY (examenID,historialID),
+FOREIGN KEY(examenID) references Examen(examenID),
+FOREIGN KEY(historialID) references Historial(historialID)
+);
+
+CREATE TABLE Pregunta(
+preguntaID INT,
+fechaUltimaEdicion DATETIME,
+pregunta VARCHAR(100),
+descripcion VARCHAR(1000),
+PRIMARY KEY (preguntaID)
+);
+
+CREATE TABLE posiblesRespuestas(
+preguntaID INT,
+posibleRespuesta CHAR,
+PRIMARY KEY(preguntaID,posibleRespuesta),
+FOREIGN KEY (preguntaID) references Pregunta(preguntaID)
+);
+
+CREATE TABLE Respuesta (
+respuestaID INT,
+examenID INT,
+preguntaID INT,
+fechaUltimaEdicion datetime,
+respuesta CHAR,
+PRIMARY KEY (respuestaID),
+FOREIGN KEY (examenID) references Examen(examenID),
+FOREIGN KEY (preguntaID) references Pregunta(preguntaID)
 );
