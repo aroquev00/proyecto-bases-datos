@@ -2,14 +2,24 @@
 -- enfermedades previas
 -- síntoma
 -- catalogo enfermedades
--- medicina
+-- medicamento
+-- receta
 
-CREATE TABLE medicina (
-    medicinaID INT,
+CREATE TABLE medicamento (
+    medicamentoID INT,
     nombre VARCHAR(20),
     presentacion VARCHAR(50),
-    PRIMARY KEY (medicinaID)
+    PRIMARY KEY (medicamentoID)
 );
+
+CREATE TABLE consultaRecetaMedicamento (
+    consultaID INT,
+    medicamentoID INT,
+    fechaInicioReceta DATE,
+    fechaFinReceta DATE,
+    dosisReceta VARCHAR(100)
+    
+)
 
 -- falta el FK al paciente, o del paciente al historial
 CREATE TABLE historial (
@@ -21,7 +31,7 @@ CREATE TABLE historial (
     tomador BOOLEAN,
     horasSuenio INT,
     calidadSuenio VARCHAR(10),
-    PRIMARY KEY (medicinaID)  
+    PRIMARY KEY (medicamentoID)  
 );
 
 CREATE TABLE enfermedadPrevia (
