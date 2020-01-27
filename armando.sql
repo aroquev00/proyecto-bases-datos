@@ -75,7 +75,7 @@ CREATE TABLE sintoma (
     PRIMARY KEY (sintomaID)
 );
 
-CREATE TABLE Paciente(
+CREATE TABLE paciente(
   pacienteID int NOT NULL,
   nombre varchar(20),
   apellidoPaterno varchar(20),
@@ -89,7 +89,7 @@ CREATE TABLE Paciente(
   FOREIGN KEY(visitaID) REFERENCES Consulta(visitaID)
 );
 
-CREATE TABLE SeguroMedico(
+CREATE TABLE seguroMedico(
   numeroPoliza int,
   vigencia date,
   expedicion date,
@@ -98,8 +98,8 @@ CREATE TABLE SeguroMedico(
   PRIMARY KEY(numeroPoliza)
 );
 
-CREATE TABLE Consulta(
-  visitaID int,
+CREATE TABLE consulta(
+  consultaID int,
   fecha date,
   peso double,
   estatura double,
@@ -110,7 +110,7 @@ CREATE TABLE Consulta(
   FOREIGN KEY(doctorID) REFERENCES Doctor(doctorID)
 );
 
-CREATE TABLE Doctor(
+CREATE TABLE doctor(
   doctorID int,
   cedula char(18),
   nombre varchar(20),
@@ -125,7 +125,7 @@ CREATE TABLE reportan (
     FOREIGN KEY (sintomaID) REFERENCES Sintoma(sintomaID)
 );
 
-CREATE TABLE Examen (
+CREATE TABLE examen (
 examenID INT,
 tipo CHAR,
 fechaEmision DateTime,
@@ -141,7 +141,7 @@ FOREIGN KEY(examenID) references Examen(examenID),
 FOREIGN KEY(historialID) references Historial(historialID)
 );
 
-CREATE TABLE Pregunta(
+CREATE TABLE pregunta(
 preguntaID INT,
 fechaUltimaEdicion DATETIME,
 pregunta VARCHAR(100),
@@ -149,14 +149,14 @@ descripcion VARCHAR(1000),
 PRIMARY KEY (preguntaID)
 );
 
-CREATE TABLE posiblesRespuestas(
+CREATE TABLE posibleRespuestas(
 preguntaID INT,
 posibleRespuesta CHAR,
-PRIMARY KEY(preguntaID,posibleRespuesta),
+PRIMARY KEY(preguntaID, posibleRespuesta),
 FOREIGN KEY (preguntaID) references Pregunta(preguntaID)
 );
 
-CREATE TABLE Respuesta (
+CREATE TABLE respuesta (
 respuestaID INT,
 examenID INT,
 preguntaID INT,
