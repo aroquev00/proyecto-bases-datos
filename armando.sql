@@ -23,6 +23,20 @@ CREATE TABLE consultaRecetaMedicamento (
     FOREIGN KEY (medicamentoID) REFERENCES medicamento(medicamentoID)
 );
 
+CREATE TABLE enfermedad (
+    enfermedadID INT,
+    nombreEnfermedad VARCHAR(20),
+    PRIMARY KEY (enfermedadID)
+);
+
+CREATE TABLE consultaDiagnosticaEnfermedad (
+    consultaID INT,
+    enfermedadID INT,
+    PRIMARY KEY (consultaID, enfermedadID),
+    FOREIGN KEY (consultaID) REFERENCES consulta(consultaID),
+    FOREIGN KEY (enfermedadID) REFERENCES enfermedad(enfermedadID)
+);
+
 -- falta el FK al paciente, o del paciente al historial
 CREATE TABLE historial (
     historialID INT,
@@ -39,16 +53,19 @@ CREATE TABLE historial (
 CREATE TABLE enfermedadPrevia (
     enfermedadPreviaID INT,
     fechaEnfermedad DATE,
-    -- tratamientos? multivalue
+    tratamientoEnfermedadPrevia VARCHAR(1000),
     enfermedadID INT,
     PRIMARY KEY (enfermedadPreviaID),
     FOREIGN KEY (enfermedadID) REFERENCES enfermedad(enfermedadID)
 );
 
-CREATE TABLE enfermedad (
-    enfermedadID INT,
-    nombreEnfermedad VARCHAR(20),
-    PRIMARY KEY (enfermedadID)
+CREATE TABLE antecedenteFamiliar (
+    historialPacienteID INT,
+    historialFamiliarID INT,
+    parentesco VARCHAR(20),
+    PRIMARY KEY (historialPacienteID, historialFamiliarID),
+    FOREIGN KEY (historialPacienteID) REFERENCES paciente(pacienteID),
+    FOREIGN KEY (historialFamiliarID) REFERENCES paciente(pacienteID)
 );
 
 CREATE TABLE sintoma (
