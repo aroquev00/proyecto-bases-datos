@@ -17,9 +17,11 @@ CREATE TABLE consultaRecetaMedicamento (
     medicamentoID INT,
     fechaInicioReceta DATE,
     fechaFinReceta DATE,
-    dosisReceta VARCHAR(100)
-    
-)
+    dosisReceta VARCHAR(100),
+    PRIMARY KEY (consultaID, medicamentoID),
+    FOREIGN KEY (consultaID) REFERENCES consulta(consultaID),
+    FOREIGN KEY (medicamentoID) REFERENCES medicamento(medicamentoID)
+);
 
 -- falta el FK al paciente, o del paciente al historial
 CREATE TABLE historial (
