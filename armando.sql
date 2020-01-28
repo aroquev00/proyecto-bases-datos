@@ -52,10 +52,12 @@ CREATE TABLE historial (
 
 CREATE TABLE enfermedadPrevia (
     enfermedadPreviaID INT,
+    historialID INT,
     fechaEnfermedad DATE,
     tratamientoEnfermedadPrevia VARCHAR(1000),
     enfermedadID INT,
     PRIMARY KEY (enfermedadPreviaID),
+    FOREIGN KEY (historialID) REFERENCES historial(historalID),
     FOREIGN KEY (enfermedadID) REFERENCES enfermedad(enfermedadID)
 );
 
@@ -77,73 +79,80 @@ CREATE TABLE sintoma (
 
 CREATE TABLE paciente(
   pacienteID int NOT NULL,
-  nombre varchar(20),
-  apellidoPaterno varchar(20),
-  apellidoMaterno varchar(20),
-  fechaNacimiento date,
-  genero char,
-  tipoSangre varchar(3),
-  PRIMARY KEY(pacienteID)
-  FOREIGN KEY(historialID) REFERENCES Historial(historalID),
-  FOREIGN KEY(numeroPoliza) REFERENCES SeguroMedico(numeroPoliza),
-  FOREIGN KEY(visitaID) REFERENCES Consulta(visitaID)
+  historialID INT,
+  nombrePaciente varchar(20),
+  apellidoPaternoPaciente varchar(20),
+  apellidoMaternoPaciente varchar(20),
+  fechaNacimientoPaciente date,
+  generoPaciente char,
+  tipoSangrePaciente varchar(3),
+  PRIMARY KEY(pacienteID),
+  FOREIGN KEY(historialID) REFERENCES historial(historalID),
 );
 
 CREATE TABLE seguroMedico(
   numeroPoliza int,
-  vigencia date,
-  expedicion date,
-  compañia varchar(50),
-  limite int
-  PRIMARY KEY(numeroPoliza)
+  pacienteID INT,
+  vigenciaSeguroMedico date,
+  expedicionSeguroMedico date,
+  companiaSeguroMedico varchar(50),
+  limiteSeguroMedico int,
+  PRIMARY KEY(numeroPoliza),
+  FOREIGN KEY (pacienteID) REFERENCES paciente(pacienteID)
 );
 
 CREATE TABLE consulta(
   consultaID int,
-  fecha date,
-  peso double,
-  estatura double,
+  pacienteID INT,
+  doctorID INT,
+  numeroPoliza INT,
+  fechaConsulta date,
+  pesoEnConsulta FLOAT,
+  estaturaEnConsulta FLOAT,
   notaClinica varchar(500),
   peea varchar(500),
-  PRIMARY KEY (visitaID),
-  FOREIGN KEY(numeroPoliza) REFERENCES SeguroMedico(numeroPoliza),
-  FOREIGN KEY(doctorID) REFERENCES Doctor(doctorID)
+  PRIMARY KEY (consultaID),
+  FOREIGN KEY(pacienteID) REFERENCES paciente(pacienteID),
+  FOREIGN KEY(doctorID) REFERENCES doctor(doctorID),
+  FOREIGN KEY(numeroPoliza) REFERENCES seguroMedico(numeroPoliza)
 );
 
 CREATE TABLE doctor(
   doctorID int,
   cedula char(18),
-  nombre varchar(20),
-  apellido varchar(20)
+  nombreDoctor varchar(20),
+  apellidoDoctor varchar(20),
+  especialidadDoctor VARCHAR(20),
   PRIMARY KEY(doctorID)
 );
 
-CREATE TABLE reportan (
+CREATE TABLE consultaReportaSintoma (
     consultaID INT,
     sintomaID INT,
+    PRIMARY KEY (consultaID, sintomaID),
     FOREIGN KEY (consultaID) REFERENCES Consulta(consultaID),
     FOREIGN KEY (sintomaID) REFERENCES Sintoma(sintomaID)
 );
 
 CREATE TABLE examen (
 examenID INT,
-tipo CHAR,
+tipoExamen VARCHAR(20),
 fechaEmision DateTime,
 nombre VARCHAR(15),
 PRIMARY KEY(examenID)
 ); 
 
-CREATE TABLE tieneExamen (
+CREATE TABLE historialTieneExamen (
 examenID INT,
 historialID INT,
-PRIMARY KEY (examenID,historialID),
-FOREIGN KEY(examenID) references Examen(examenID),
-FOREIGN KEY(historialID) references Historial(historialID)
+PRIMARY KEY (examenID, historialID),
+FOREIGN KEY(examenID) references examen(examenID),
+FOREIGN KEY(historialID) references historial(historialID)
 );
 
 CREATE TABLE pregunta(
 preguntaID INT,
-fechaUltimaEdicion DATETIME,
+fechaUltimaEdicion DATE,
 pregunta VARCHAR(100),
 descripcion VARCHAR(1000),
 PRIMARY KEY (preguntaID)
@@ -151,7 +160,7 @@ PRIMARY KEY (preguntaID)
 
 CREATE TABLE posibleRespuestas(
 preguntaID INT,
-posibleRespuesta CHAR,
+posibleRespuesta VARCHAR(20),
 PRIMARY KEY(preguntaID, posibleRespuesta),
 FOREIGN KEY (preguntaID) references Pregunta(preguntaID)
 );
@@ -160,9 +169,9 @@ CREATE TABLE respuesta (
 respuestaID INT,
 examenID INT,
 preguntaID INT,
-fechaUltimaEdicion datetime,
-respuesta CHAR,
+fechaRespuesta date,
+respuesta VARCHAR(20),
 PRIMARY KEY (respuestaID),
-FOREIGN KEY (examenID) references Examen(examenID),
-FOREIGN KEY (preguntaID) references Pregunta(preguntaID)
+FOREIGN KEY (examenID) references examen(examenID),
+FOREIGN KEY (preguntaID) references pregunta(preguntaID)
 );
