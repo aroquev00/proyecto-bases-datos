@@ -1,4 +1,4 @@
-drop database expedientemedico;
+--drop database expedienteMedico;
 BEGIN;
 CREATE DATABASE expedienteMedico;
 USE expedienteMedico;
@@ -129,8 +129,8 @@ CREATE TABLE consultaReportaSintoma (
     consultaID INT,
     sintomaID INT,
     PRIMARY KEY (consultaID, sintomaID),
-    FOREIGN KEY (consultaID) REFERENCES Consulta(consultaID),
-    FOREIGN KEY (sintomaID) REFERENCES Sintoma(sintomaID)
+    FOREIGN KEY (consultaID) REFERENCES consulta(consultaID),
+    FOREIGN KEY (sintomaID) REFERENCES sintoma(sintomaID)
 );
 
 CREATE TABLE examen (
