@@ -24,7 +24,7 @@ CREATE TABLE paciente(
   fechaNacimientoPaciente date,
   generoPaciente char,
   tipoSangrePaciente varchar(3),
-  PRIMARY KEY(pacienteID),
+  PRIMARY KEY(pacienteID)
 );
 
 CREATE TABLE historial (
