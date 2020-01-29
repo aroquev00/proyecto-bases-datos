@@ -1,3 +1,12 @@
+DELETE FROM medicamento;
+DELETE FROM enfermedad;
+DELETE FROM doctor;
+DELETE FROM historial;
+DELETE FROM paciente;
+DELETE FROM consulta;
+DELETE FROM consultaDiagnosticaEnfermedad;
+DELETE FROM consultaRecetaMedicamento;
+
 -- cada uno un paciente, cada paciente 5 consultas, 3 deben tener dos enfermedades y dos medicamentos
 -- medicamentos
 INSERT INTO medicamento (medicamentoID, nombre, presentacion)
@@ -18,19 +27,19 @@ VALUES (1, 'C1', 'Juan', 'Perez', 'Nutriologo'),
 (2, 'C2', 'Fatima', 'Gonzalez', 'Psicologo'),
 (3, 'C3', 'Ruben', 'Lopez', 'Pediatra');
 
--- crear historiales de los pacientes
-INSERT INTO historial (historialID, fechaUltimaConsulta, fechaUltimaActualizacion, horasEjercicio, fumador, tomador, horasSuenio, calidadSuenio)
-VALUES (1, '2020-01-24', '2020-01-27', 5, FALSE, FALSE, 8, 'Bueno'),
-(2, '2020-01-25', '2020-01-28', 3, FALSE, TRUE, 7, 'Regular'),
-(3, '2020-01-15','2020-01-27', 5, FALSE, TRUE, 7, 'Regular'),
-(4, '2020-01-26', '2020-01-29', 2, FALSE, FALSE, 6, 'Regular');
-
 -- crear pacientes
-INSERT INTO paciente (pacienteID, historialID, nombrePaciente, apellidoPaternoPaciente, apellidoMaternoPaciente, fechaNacimientoPaciente, generoPaciente, tipoSangrePaciente)
-VALUES (1, 1, 'Armando', 'Roque', 'Villasana', '2000-05-13', 'M', 'O+'),
-(2, 2, 'Emilio', 'Villarreal', 'Flores', '1998-10-11', 'M', 'B+'),
-(3, 3, 'Nestor', 'Rubio', 'Lopez', '1998-06-29', 'M', 'O+'),
-(4, 4, 'Erick', 'Hernandez', 'Vallejo', '1999-03-15', 'M', 'B-');
+INSERT INTO paciente (pacienteID, nombrePaciente, apellidoPaternoPaciente, apellidoMaternoPaciente, fechaNacimientoPaciente, generoPaciente, tipoSangrePaciente)
+VALUES (1, 'Armando', 'Roque', 'Villasana', '2000-05-13', 'M', 'O+'),
+(2, 'Emilio', 'Villarreal', 'Flores', '1998-10-11', 'M', 'B+'),
+(3, 'Nestor', 'Rubio', 'Lopez', '1998-06-29', 'M', 'O+'),
+(4, 'Erick', 'Hernandez', 'Vallejo', '1999-03-15', 'M', 'B-');
+
+-- crear historiales de los pacientes
+INSERT INTO historial (historialID, pacienteID, fechaUltimaConsulta, fechaUltimaActualizacion, horasEjercicio, fumador, tomador, horasSuenio, calidadSuenio)
+VALUES (1, 1, '2020-01-24', '2020-01-27', 5, FALSE, FALSE, 8, 'Bueno'),
+(2, 2, '2020-01-25', '2020-01-28', 3, FALSE, TRUE, 7, 'Regular'),
+(3, 3, '2020-01-15','2020-01-27', 5, FALSE, TRUE, 7, 'Regular'),
+(4, 4, '2020-01-26', '2020-01-29', 2, FALSE, FALSE, 6, 'Regular');
 
 -- crear consultas
 
@@ -71,8 +80,11 @@ VALUES (16, 3, 1, NULL, '2019-01-17', 90, 1.77, 'nC 16', 'peea 16'),
 -- agregar diagnóstico de enfermedades
 INSERT INTO consultaDiagnosticaEnfermedad (consultaID, enfermedadID)
 VALUES (2, 3),
+(2, 1),
 (3, 3),
+(3, 2),
 (5,2),
+(5, 1),
 (6, 1),
 (8, 2),
 (10, 3),
@@ -86,8 +98,11 @@ VALUES (2, 3),
 -- agregar recetado de medicinas
 INSERT INTO consultaRecetaMedicamento(consultaID, medicamentoID, fechaInicioReceta, fechaFinReceta, dosisReceta)
 VALUES (2, 1, '2019-03-07', '2019-03-15', 'Una pastilla diario por las noches'),
+(2, 2, '2019-03-07', '2019-03-15', 'Dos pastillsa diario por las noches'),
 (3, 2, '2019-12-20', '2019-12-26', 'Una pastilla diario por las manianas'),
+(3, 3, '2019-12-20', '2019-12-23', 'Una pastilla diario por la tarde'),
 (5, 3, '2020-01-23', '2020-01-30', 'Una pastilla diario al mediodia'),
+(5, 1, '2020-01-23', '2020-01-30', 'Media pastilla diario al mediodia'),
 (6, 3, '2020-03-26', '2020-03-29', 'Una pastilla diario al mediodia'),
 (8, 1, '2019-03-12', '2019-03-20', 'Una pastilla diario por las noches'),
 (10, 1, '2019-04-13', '2019-04-20', 'Una pastilla diario al mediodia'),
