@@ -1,4 +1,4 @@
---drop database expedienteMedico;
+DROP DATABASE expedienteMedico;
 BEGIN;
 CREATE DATABASE expedienteMedico;
 USE expedienteMedico;
@@ -16,21 +16,8 @@ CREATE TABLE enfermedad (
     PRIMARY KEY (enfermedadID)
 );
 
-CREATE TABLE historial (
-    historialID INT,
-    fechaUltimaConsulta DATE,
-    fechaUltimaActualizacion DATE,
-    horasEjercicio INT,
-    fumador BOOLEAN,
-    tomador BOOLEAN,
-    horasSuenio INT,
-    calidadSuenio VARCHAR(10),
-    PRIMARY KEY (historialID)  
-);
-
 CREATE TABLE paciente(
   pacienteID int NOT NULL,
-  historialID INT,
   nombrePaciente varchar(20),
   apellidoPaternoPaciente varchar(20),
   apellidoMaternoPaciente varchar(20),
@@ -38,7 +25,20 @@ CREATE TABLE paciente(
   generoPaciente char,
   tipoSangrePaciente varchar(3),
   PRIMARY KEY(pacienteID),
-  FOREIGN KEY(historialID) REFERENCES historial(historialID)
+);
+
+CREATE TABLE historial (
+    historialID INT,
+    pacienteID INT,
+    fechaUltimaConsulta DATE,
+    fechaUltimaActualizacion DATE,
+    horasEjercicio INT,
+    fumador BOOLEAN,
+    tomador BOOLEAN,
+    horasSuenio INT,
+    calidadSuenio VARCHAR(10),
+    PRIMARY KEY (historialID),
+    FOREIGN KEY(pacienteID) REFERENCES paciente(pacienteID)
 );
 
 CREATE TABLE sintoma (
@@ -174,3 +174,4 @@ PRIMARY KEY (respuestaID),
 FOREIGN KEY (examenID) references examen(examenID),
 FOREIGN KEY (preguntaID) references pregunta(preguntaID)
 );
+END;
