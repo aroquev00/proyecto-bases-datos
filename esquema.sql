@@ -18,7 +18,7 @@ CREATE TABLE enfermedad (
     diagnosticoFrecuente INT,
     ICD9CM VARCHAR(8),
     ICD10M VARCHAR(9),
-    DSM5 VARCHAR(200),
+    DSM5 VARCHAR(500),
     PRIMARY KEY (idDiagnostico)
 );
 
