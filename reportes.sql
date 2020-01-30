@@ -29,7 +29,7 @@ END;
 -- todos
 CREATE PROCEDURE numeroVecesMedicamentoRecetado()
 BEGIN
-    SELECT nombre, presentacion, COUNT(*) AS numeroVecesRecetado
+    SELECT nombreMedicamento, presentacionMedicamento, COUNT(*) AS numeroVecesRecetado
     FROM medicamento AS M
     JOIN consultaRecetaMedicamento AS CRM ON M.medicamentoID = CRM.medicamentoID
     GROUP BY nombre, presentacion
