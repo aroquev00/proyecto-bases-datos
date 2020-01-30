@@ -8,6 +8,7 @@ CREATE TABLE medicamento (
     nombreMedicamento VARCHAR(50),
     presentacionMedicamento VARCHAR(50),
     miligramosMedicamento FLOAT,
+    numeroMedicamento VARCHAR(40),
     sustanciaActivaMedicamento VARCHAR(50),
     usoMedicamento VARCHAR(50),
     PRIMARY KEY (medicamentoID)
