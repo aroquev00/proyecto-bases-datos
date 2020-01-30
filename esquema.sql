@@ -14,12 +14,12 @@ CREATE TABLE medicamento (
 );
 
 CREATE TABLE enfermedad (
-    idDiagnostico INT,
+    enfermedadID INT,
     diagnosticoFrecuente INT,
     ICD9CM VARCHAR(8),
     ICD10M VARCHAR(9),
     DSM5 VARCHAR(500),
-    PRIMARY KEY (idDiagnostico)
+    PRIMARY KEY (enfermedadID)
 );
 
 CREATE TABLE paciente(
