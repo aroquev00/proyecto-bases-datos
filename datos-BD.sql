@@ -32,7 +32,8 @@ INSERT INTO paciente (pacienteID, nombrePaciente, apellidoPaternoPaciente, apell
 VALUES (1, 'Armando', 'Roque', 'Villasana', '2000-05-13', 'M', 'O+', 'Ricardo Margain 444', 'Zona Campestre', 'San Pedro', '8100000000'),
 (2, 'Emilio', 'Villarreal', 'Flores', '1998-10-11', 'M', 'B+'),
 (3, 'Nestor', 'Rubio', 'Lopez', '1998-06-29', 'M', 'O+'),
-(4, 'Erick', 'Hernandez', 'Vallejo', '1999-03-15', 'M', 'B-');
+(4, 'Erick', 'Hernandez', 'Vallejo', '1999-03-15', 'M', 'B-')
+(5, 'Armando', 'Roque', 'Rodriguez', '1972-09-06', 'M', 'O+', 'Ricardo Margain 444', 'Zona Campestre', 'San Pedro', '8111111111');
 
 -- crear historiales de los pacientes
 INSERT INTO historial (historialID, pacienteID, fechaUltimaConsulta, fechaUltimaActualizacion, horasEjercicio, fumador, tomador, horasSuenio, calidadSuenio)
@@ -112,3 +113,10 @@ VALUES (2, 1, '2019-03-07', '2019-03-15', 'Una pastilla diario por las noches'),
 (16, 2, '2019-08-18', '2019-08-23', 'Una pastilla diario al mediodia'),
 (18, 1, '2019-09-19', '2019-09-27', 'Una pastilla diario por las manianas'),
 (20, 1, '2019-10-01', '2019-10-12', 'Una pastilla diario por las noches');
+
+
+-- agregar síntomas
+INSERT INTO sintoma(sintomaID, nombreSintoma, descripcionSintoma)
+VALUES (1, 'Dolor de cabeza', 'Un dolor de cabeza es un dolor o molestia en la cabeza, el cuero cabelludo o el cuello.'),
+(2, 'Dolor de estomago', 'Dolor desde el interior del abdomen o de la pared muscular externa, que va desde leve y temporal a intenso.'),
+(3, '')
