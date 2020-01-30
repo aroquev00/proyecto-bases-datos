@@ -5,12 +5,12 @@ USE expedienteMedico;
 
 CREATE TABLE medicamento ( 
     medicamentoID INT,
-    nombreMedicamento VARCHAR(50),
-    presentacionMedicamento VARCHAR(50),
-    miligramosMedicamento VARCHAR(30),
-    numeroMedicamento VARCHAR(40),
-    sustanciaActivaMedicamento VARCHAR(50),
-    usoMedicamento VARCHAR(50),
+    nombreMedicamento VARCHAR(500),
+    presentacionMedicamento VARCHAR(500),
+    miligramosMedicamento VARCHAR(500),
+    numeroMedicamento VARCHAR(500),
+    sustanciaActivaMedicamento VARCHAR(500),
+    usoMedicamento VARCHAR(500),
     PRIMARY KEY (medicamentoID)
 );
 
