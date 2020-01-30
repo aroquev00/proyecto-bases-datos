@@ -1149,9 +1149,9 @@ VALUES (1, 'C1', 'Juan', 'Perez', 'Nutriologo'),
 -- crear pacientes
 INSERT INTO paciente (pacienteID, nombrePaciente, apellidoPaternoPaciente, apellidoMaternoPaciente, fechaNacimientoPaciente, generoPaciente, tipoSangrePaciente, callePaciente, coloniaPaciente, ciudadPaciente, telefonoPaciente)
 VALUES (1, 'Armando', 'Roque', 'Villasana', '2000-05-13', 'M', 'O+', 'Ricardo Margain 444', 'Zona Campestre', 'San Pedro', '8100000000'),
-(2, 'Emilio', 'Villarreal', 'Flores', '1998-10-11', 'M', 'B+'),
-(3, 'Nestor', 'Rubio', 'Lopez', '1998-06-29', 'M', 'O+'),
-(4, 'Erick', 'Hernandez', 'Vallejo', '1999-03-15', 'M', 'B-'),
+(2, 'Emilio', 'Villarreal', 'Flores', '1998-10-11', 'M', 'B+', 'Ricardo Margain 444', 'Zona Campestre', 'San Pedro', '8100000000'),
+(3, 'Nestor', 'Rubio', 'Lopez', '1998-06-29', 'M', 'O+', 'Ricardo Margain 444', 'Zona Campestre', 'San Pedro', '8100000000'),
+(4, 'Erick', 'Hernandez', 'Vallejo', '1999-03-15', 'M', 'B-', 'Ricardo Margain 444', 'Zona Campestre', 'San Pedro', '8100000000'),
 (5, 'Armando', 'Roque', 'Rodriguez', '1972-09-06', 'M', 'O+', 'Ricardo Margain 444', 'Zona Campestre', 'San Pedro', '8111111111');
 
 -- crear historiales de los pacientes
@@ -1237,5 +1237,4 @@ VALUES (2, 1, '2019-03-07', '2019-03-15', 'Una pastilla diario por las noches'),
 -- agregar síntomas
 INSERT INTO sintoma(sintomaID, nombreSintoma, descripcionSintoma)
 VALUES (1, 'Dolor de cabeza', 'Un dolor de cabeza es un dolor o molestia en la cabeza, el cuero cabelludo o el cuello.'),
-(2, 'Dolor de estomago', 'Dolor desde el interior del abdomen o de la pared muscular externa, que va desde leve y temporal a intenso.'),
-(3, '')
+(2, 'Dolor de estomago', 'Dolor desde el interior del abdomen o de la pared muscular externa, que va desde leve y temporal a intenso.');
