@@ -7,7 +7,7 @@ CREATE TABLE medicamento (
     medicamentoID INT,
     nombreMedicamento VARCHAR(50),
     presentacionMedicamento VARCHAR(50),
-    miligramosMedicamento FLOAT,
+    miligramosMedicamento VARCHAR(30),
     numeroMedicamento VARCHAR(40),
     sustanciaActivaMedicamento VARCHAR(50),
     usoMedicamento VARCHAR(50),
