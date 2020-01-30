@@ -28,8 +28,8 @@ VALUES (1, 'C1', 'Juan', 'Perez', 'Nutriologo'),
 (3, 'C3', 'Ruben', 'Lopez', 'Pediatra');
 
 -- crear pacientes
-INSERT INTO paciente (pacienteID, nombrePaciente, apellidoPaternoPaciente, apellidoMaternoPaciente, fechaNacimientoPaciente, generoPaciente, tipoSangrePaciente)
-VALUES (1, 'Armando', 'Roque', 'Villasana', '2000-05-13', 'M', 'O+'),
+INSERT INTO paciente (pacienteID, nombrePaciente, apellidoPaternoPaciente, apellidoMaternoPaciente, fechaNacimientoPaciente, generoPaciente, tipoSangrePaciente, callePaciente, coloniaPaciente, ciudadPaciente, telefonoPaciente)
+VALUES (1, 'Armando', 'Roque', 'Villasana', '2000-05-13', 'M', 'O+', 'Ricardo Margain 444', 'Zona Campestre', 'San Pedro', '8100000000'),
 (2, 'Emilio', 'Villarreal', 'Flores', '1998-10-11', 'M', 'B+'),
 (3, 'Nestor', 'Rubio', 'Lopez', '1998-06-29', 'M', 'O+'),
 (4, 'Erick', 'Hernandez', 'Vallejo', '1999-03-15', 'M', 'B-');

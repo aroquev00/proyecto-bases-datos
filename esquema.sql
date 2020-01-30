@@ -24,6 +24,10 @@ CREATE TABLE paciente(
   fechaNacimientoPaciente date,
   generoPaciente char,
   tipoSangrePaciente varchar(3),
+  callePaciente VARCHAR(30),
+  coloniaPaciente VARCHAR(30),
+  ciudadPaciente VARCHAR(10),
+  telefonoPaciente VARCHAR(10),
   PRIMARY KEY(pacienteID)
 );
 
