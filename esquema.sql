@@ -5,15 +5,21 @@ USE expedienteMedico;
 
 CREATE TABLE medicamento ( 
     medicamentoID INT,
-    nombre VARCHAR(20),
-    presentacion VARCHAR(50),
+    nombreMedicamento VARCHAR(20),
+    presentacionMedicamento VARCHAR(50),
+    miligramosMedicamento FLOAT,
+    sustanciaActivaMedicamento VARCHAR(30),
+    usoMedicamento VARCHAR(100),
     PRIMARY KEY (medicamentoID)
 );
 
 CREATE TABLE enfermedad (
-    enfermedadID INT,
-    nombreEnfermedad VARCHAR(20),
-    PRIMARY KEY (enfermedadID)
+    idDiagnostico INT,
+    diagnosticoFrecuente INT,
+    ICD9CM VARCHAR(8),
+    ICD10M VARCHAR(9),
+    DSM5 VARCHAR(200),
+    PRIMARY KEY (idDiagnostico)
 );
 
 CREATE TABLE paciente(
