@@ -1164,7 +1164,9 @@ VALUES (1, 'Armando', 'Roque', 'Villasana', '2000-05-13', 'M', 'O+', 'Ricardo Ma
 (3, 'Nestor', 'Rubio', 'Lopez', '1998-06-29', 'M', 'O+', 'Av. Alvaro Obregon 2500 sur', 'Lomas del Bosque',  'Culiacan', '6679968980'),
 (4, 'Erick', 'Hernandez', 'Vallejo', '1999-03-15', 'M', 'B-', 'Rio de Janeiro 330', 'Alta Vista', 'Monterrey', '8688207790'),
 (5, 'Armando', 'Roque', 'Rodriguez', '1972-09-06', 'M', 'O+', 'Ricardo Margain 444', 'Zona Campestre', 'San Pedro', '8111111111'),
-(6, 'José', 'Villasana', 'Rosas', '1949-11-05', 'M', 'A+', 'Heimstrasse 10', 'Kreuzberg', 'Berlin', '4910101010');
+(6, 'José', 'Villasana', 'Rosas', '1949-11-05', 'M', 'A+', 'Heimstrasse 10', 'Kreuzberg', 'Berlin', '4910101010'),
+(7, 'Jose', 'Rubio', 'Luque', '1961-12-27', 'M', 'A+', 'Av. Alvaro Obregon 2500', 'Lomas del Bosque', 'Culiacan', '6671820303'),
+(8, 'Indelisa', 'Lopez', 'Verdugo', '1962-07-04', 'F', 'B-', 'Av. Alvaro Obregon 2500', 'Lomas del Bosque', 'Culiacan', '6671820303');
 
 -- crear historiales de los pacientes
 INSERT INTO historial (historialID, pacienteID, fechaUltimaConsulta, fechaUltimaActualizacion, horasEjercicio, fumador, tomador, horasSuenio, calidadSuenio)
@@ -1173,7 +1175,9 @@ VALUES (1, 1, '2020-01-24', '2020-01-27', 5, FALSE, FALSE, 8, 'Bueno'),
 (3, 3, '2020-01-15','2020-01-27', 5, FALSE, TRUE, 7, 'Regular'),
 (4, 4, '2020-01-26', '2020-01-29', 2, FALSE, FALSE, 6, 'Regular'),
 (5, 5, NULL, '2020-01-30', 5, FALSE, TRUE, 7, 'Bueno'),
-(6, 6, NULL, '2019-12-3', 4, FALSE, TRUE, 6, 'Regular');
+(6, 6, NULL, '2019-12-3', 4, FALSE, TRUE, 6, 'Regular'),
+(7, 7, '2017-09-06', '2017-09-07', '12', FALSE, FALSE, 8, 'Regular'),
+(8, 8, '2018-10-12', '2018-10-13', '8', FALSE, FALSE, 10, 'Regular');
 
 
 -- crear seguros médicos
@@ -1266,7 +1270,9 @@ VALUES (492, 6, '1990-01-01', 'Terapia cognitiva 6 meses'),
 -- agergar antecedentes familiares
 INSERT INTO antecedenteFamiliar (historialPacienteID, historialFamiliarID, parentesco)
 VALUES (1, 5, 'Padre'),
-(1, 6, 'Abuelo materno');
+(1, 6, 'Abuelo materno'),
+(3, 7, 'Padre'),
+(3, 8, 'Madre');
 
 -- agregar síntomas
 INSERT INTO sintoma(sintomaID, nombreSintoma, descripcionSintoma)
