@@ -1,14 +1,25 @@
 DELETE FROM medicamento;
 DELETE FROM enfermedad;
-DELETE FROM doctor;
-DELETE FROM historial;
 DELETE FROM paciente;
+DELETE FROM historial;
+DELETE FROM sintoma;
+DELETE FROM doctor;
+DELETE FROM seguroMedico;
 DELETE FROM consulta;
-DELETE FROM consultaDiagnosticaEnfermedad;
 DELETE FROM consultaRecetaMedicamento;
+DELETE FROM consultaDiagnosticaEnfermedad;
+DELETE FROM enfermedadPrevia;
+DELETE FROM antecedenteFamiliar;
+DELETE FROM consultaReportaSintoma;
+DELETE FROM examen;
+DELETE FROM historialTieneExamen;
+DELETE FROM pregunta;
+DELETE FROM posibleRespuestas;
+DELETE FROM respuesta;
 
 -- cada uno un paciente, cada paciente 5 consultas, 3 deben tener dos enfermedades y dos medicamentos
--- medicamentos
+
+-- enfermedades
 INSERT INTO enfermedad VALUES
     (1,NULL,'V62.3','Z55.9','Academic or educational problem'),
     (2,NULL,'V62.4','Z60.3','Acculturation difficulty'),
@@ -967,7 +978,7 @@ INSERT INTO enfermedad VALUES
     (955,NULL,'V40.31','Z91.83','Wandering associated with a mental disorder');
 
 
--- medicamento
+-- medicamentos
 INSERT INTO medicamento VALUES
     (1,'ACXION','AP','30 MG','C/30','FENTERMINA',NULL),
     (2,'ADEPSIQUE','TAB','10MG','C/30','AMITRIPTILINA. DIAZEPAM. PERFENAZINA',NULL),
@@ -1140,7 +1151,7 @@ INSERT INTO medicamento VALUES
     (169,'VICTAN',NULL,'2MG','C/30','LOFLAZEPATO DE ETILO','Ansiolítico.');
 
 
--- crear doctores
+-- doctores
 INSERT INTO doctor (doctorID, cedula, nombreDoctor, apellidoDoctor, especialidadDoctor)
 VALUES (1, 'C1', 'Juan', 'Perez', 'Nutriologo'),
 (2, 'C2', 'Fatima', 'Gonzalez', 'Psicologo'),
@@ -1149,27 +1160,43 @@ VALUES (1, 'C1', 'Juan', 'Perez', 'Nutriologo'),
 -- crear pacientes
 INSERT INTO paciente (pacienteID, nombrePaciente, apellidoPaternoPaciente, apellidoMaternoPaciente, fechaNacimientoPaciente, generoPaciente, tipoSangrePaciente, callePaciente, coloniaPaciente, ciudadPaciente, telefonoPaciente)
 VALUES (1, 'Armando', 'Roque', 'Villasana', '2000-05-13', 'M', 'O+', 'Ricardo Margain 444', 'Zona Campestre', 'San Pedro', '8100000000'),
-(2, 'Emilio', 'Villarreal', 'Flores', '1998-10-11', 'M', 'B+', 'Ricardo Margain 444', 'Zona Campestre', 'San Pedro', '8100000000'),
-(3, 'Nestor', 'Rubio', 'Lopez', '1998-06-29', 'M', 'O+', 'Ricardo Margain 444', 'Zona Campestre', 'San Pedro', '8100000000'),
-(4, 'Erick', 'Hernandez', 'Vallejo', '1999-03-15', 'M', 'B-', 'Ricardo Margain 444', 'Zona Campestre', 'San Pedro', '8100000000'),
-(5, 'Armando', 'Roque', 'Rodriguez', '1972-09-06', 'M', 'O+', 'Ricardo Margain 444', 'Zona Campestre', 'San Pedro', '8111111111');
+(2, 'Emilio', 'Villarreal', 'Flores', '1998-10-11', 'M', 'B+', 'Av.Roberto Gatza Sada 150', 'Lomas del Valle', 'San Pedro', '8183096093'),
+(3, 'Nestor', 'Rubio', 'Lopez', '1998-06-29', 'M', 'O+', 'Av. Alvaro Obregon 2500 sur', 'Lomas del Bosque',  'Culiacan', '6679968980'),
+(4, 'Erick', 'Hernandez', 'Vallejo', '1999-03-15', 'M', 'B-', 'Rio de Janeiro 330', 'Alta Vista', 'Monterrey', '8688207790'),
+(5, 'Armando', 'Roque', 'Rodriguez', '1972-09-06', 'M', 'O+', 'Ricardo Margain 444', 'Zona Campestre', 'San Pedro', '8111111111'),
+(6, 'José', 'Villasana', 'Rosas', '1949-11-05', 'M', 'A+', 'Heimstrasse 10', 'Kreuzberg', 'Berlin', '4910101010'),
+(7, 'Jose', 'Rubio', 'Luque', '1961-12-27', 'M', 'A+', 'Av. Alvaro Obregon 2500', 'Lomas del Bosque', 'Culiacan', '6671820303'),
+(8, 'Indelisa', 'Lopez', 'Verdugo', '1962-07-04', 'F', 'B-', 'Av. Alvaro Obregon 2500', 'Lomas del Bosque', 'Culiacan', '6671820303');
 
 -- crear historiales de los pacientes
 INSERT INTO historial (historialID, pacienteID, fechaUltimaConsulta, fechaUltimaActualizacion, horasEjercicio, fumador, tomador, horasSuenio, calidadSuenio)
 VALUES (1, 1, '2020-01-24', '2020-01-27', 5, FALSE, FALSE, 8, 'Bueno'),
 (2, 2, '2020-01-25', '2020-01-28', 3, FALSE, TRUE, 7, 'Regular'),
 (3, 3, '2020-01-15','2020-01-27', 5, FALSE, TRUE, 7, 'Regular'),
-(4, 4, '2020-01-26', '2020-01-29', 2, FALSE, FALSE, 6, 'Regular');
+(4, 4, '2020-01-26', '2020-01-29', 2, FALSE, FALSE, 6, 'Regular'),
+(5, 5, NULL, '2020-01-30', 5, FALSE, TRUE, 7, 'Bueno'),
+(6, 6, NULL, '2019-12-3', 4, FALSE, TRUE, 6, 'Regular'),
+(7, 7, '2017-09-06', '2017-09-07', '12', FALSE, FALSE, 8, 'Regular'),
+(8, 8, '2018-10-12', '2018-10-13', '8', FALSE, FALSE, 10, 'Regular');
+
+
+-- crear seguros médicos
+INSERT INTO seguroMedico(numeroPoliza, pacienteID, vigenciaSeguroMedico, expedicionSeguroMedico, companiaSeguroMedico, limiteSeguroMedico)
+VALUES('87923618', 1, '2022-06-15', '2015-06-15', 'GNP', 20000),
+('3517395', 1, '2020-01-02', '2010-01-02','AXA', 12000),
+('68554963', 2, '2030-08-27', '2018-08-27', 'MetLife', 50000),
+('97626593', 3, '2019-03-12', '2012-03-12', 'BBVA', 3000);
+
 
 -- crear consultas
 
 -- consultas de Armando
 INSERT INTO consulta (consultaID, pacienteID, doctorID, numeroPoliza, fechaConsulta, pesoEnConsulta, estaturaEnConsulta, notaClinica, peea)
-VALUES (1, 1, 1, NULL, '2019-01-27', 62, 1.7, 'nC 1', 'peea 1'),
-(2, 1, 2, NULL, '2019-03-07', 62, 1.7, 'nC 2', 'peea 2'),
-(3, 1, 1, NULL, '2019-06-20', 62, 1.7, 'nC 3', 'peea 3'),
-(4, 1, 2, NULL, '2019-11-09', 62, 1.7, 'nC 4', 'peea 4'),
-(5, 1, 1, NULL, '2020-01-24', 62, 1.7, 'nC 5', 'peea 5');
+VALUES (1, 1, 1, '87923618', '2019-01-27', 62, 1.7, 'nC 1', 'peea 1'),
+(2, 1, 2, '3517395', '2019-03-07', 62, 1.7, 'nC 2', 'peea 2'),
+(3, 1, 1, '87923618', '2019-06-20', 62, 1.7, 'nC 3', 'peea 3'),
+(4, 1, 2, '3517395', '2019-11-09', 62, 1.7, 'nC 4', 'peea 4'),
+(5, 1, 1, '87923618', '2020-01-24', 62, 1.7, 'nC 5', 'peea 5');
 
 -- consultas de Emilio
 INSERT INTO consulta (consultaID, pacienteID, doctorID, numeroPoliza, fechaConsulta, pesoEnConsulta, estaturaEnConsulta, notaClinica, peea)
@@ -1197,7 +1224,7 @@ VALUES (16, 3, 1, NULL, '2019-01-17', 90, 1.77, 'nC 16', 'peea 16'),
 
 
 
--- agregar diagnóstico de enfermedades
+-- agregar diagnóstico de enfermedades por consulta
 INSERT INTO consultaDiagnosticaEnfermedad (consultaID, enfermedadID)
 VALUES (2, 3),
 (2, 1),
@@ -1215,7 +1242,7 @@ VALUES (2, 3),
 (18, 1),
 (20, 3);
 
--- agregar recetado de medicinas
+-- agregar recetado de medicinas por consulta
 INSERT INTO consultaRecetaMedicamento(consultaID, medicamentoID, fechaInicioReceta, fechaFinReceta, dosisReceta)
 VALUES (2, 1, '2019-03-07', '2019-03-15', 'Una pastilla diario por las noches'),
 (2, 2, '2019-03-07', '2019-03-15', 'Dos pastillsa diario por las noches'),
@@ -1233,6 +1260,19 @@ VALUES (2, 1, '2019-03-07', '2019-03-15', 'Una pastilla diario por las noches'),
 (18, 1, '2019-09-19', '2019-09-27', 'Una pastilla diario por las manianas'),
 (20, 1, '2019-10-01', '2019-10-12', 'Una pastilla diario por las noches');
 
+
+-- agregar enfermedades previas
+INSERT INTO enfermedadPrevia(enfermedadPreviaID, historialID, fechaEnfermedad, tratamientoEnfermedadPrevia)
+VALUES (492, 6, '1990-01-01', 'Terapia cognitiva 6 meses'),
+(145, 6, '1974-06-23', 'Antidepresivo 3 meses'),
+(44, 5, '2004-07-30', 'Terapia grupal 1 año');
+
+-- agergar antecedentes familiares
+INSERT INTO antecedenteFamiliar (historialPacienteID, historialFamiliarID, parentesco)
+VALUES (1, 5, 'Padre'),
+(1, 6, 'Abuelo materno'),
+(3, 7, 'Padre'),
+(3, 8, 'Madre');
 
 -- agregar síntomas
 INSERT INTO sintoma(sintomaID, nombreSintoma, descripcionSintoma)

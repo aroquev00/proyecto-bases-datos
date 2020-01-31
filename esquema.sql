@@ -185,4 +185,5 @@ PRIMARY KEY (respuestaID),
 FOREIGN KEY (examenID) references examen(examenID),
 FOREIGN KEY (preguntaID) references pregunta(preguntaID)
 );
+
 END;
