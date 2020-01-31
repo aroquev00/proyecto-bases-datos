@@ -105,10 +105,10 @@ BEGIN
     FROM paciente AS P
     JOIN consulta AS C ON P.pacienteID = C.pacienteID
     JOIN doctor AS D ON C.doctorID = D.doctorID
-    JOIN seguroMedico sM on C.numeroPoliza = sM.numeroPoliza
-    JOIN consultaDiagnosticaEnfermedad cDE on C.consultaID = cDE.consultaID
-    JOIN enfermedad e on cDE.enfermedadID = e.enfermedadID
-    JOIN consultaRecetaMedicamento cRM on C.consultaID = cRM.consultaID
-    JOIN medicamento m on cRM.medicamentoID = m.medicamentoID
+    LEFT JOIN seguroMedico sM on C.numeroPoliza = sM.numeroPoliza
+    LEFT JOIN consultaDiagnosticaEnfermedad cDE on C.consultaID = cDE.consultaID
+    LEFT JOIN enfermedad e on cDE.enfermedadID = e.enfermedadID
+    LEFT JOIN consultaRecetaMedicamento cRM on C.consultaID = cRM.consultaID
+    LEFT JOIN medicamento m on cRM.medicamentoID = m.medicamentoID
     WHERE (P.apellidoPaternoPaciente = p_apellidoPaterno AND P.apellidoMaternoPaciente = p_apellidoMaterno AND P.nombrePaciente = p_nombre) OR P.pacienteID = p_ID;
 end;
