@@ -1160,9 +1160,9 @@ VALUES (1, 'C1', 'Juan', 'Perez', 'Nutriologo'),
 -- crear pacientes
 INSERT INTO paciente (pacienteID, nombrePaciente, apellidoPaternoPaciente, apellidoMaternoPaciente, fechaNacimientoPaciente, generoPaciente, tipoSangrePaciente, callePaciente, coloniaPaciente, ciudadPaciente, telefonoPaciente)
 VALUES (1, 'Armando', 'Roque', 'Villasana', '2000-05-13', 'M', 'O+', 'Ricardo Margain 444', 'Zona Campestre', 'San Pedro', '8100000000'),
-(2, 'Emilio', 'Villarreal', 'Flores', '1998-10-11', 'M', 'B+', 'Ricardo Margain 444', 'Zona Campestre', 'San Pedro', '8100000000'),
-(3, 'Nestor', 'Rubio', 'Lopez', '1998-06-29', 'M', 'O+', 'Ricardo Margain 444', 'Zona Campestre', 'San Pedro', '8100000000'),
-(4, 'Erick', 'Hernandez', 'Vallejo', '1999-03-15', 'M', 'B-', 'Ricardo Margain 444', 'Zona Campestre', 'San Pedro', '8100000000'),
+(2, 'Emilio', 'Villarreal', 'Flores', '1998-10-11', 'M', 'B+', 'Av.Roberto Gatza Sada 150', 'Lomas del Valle', 'San Pedro', '8183096093'),
+(3, 'Nestor', 'Rubio', 'Lopez', '1998-06-29', 'M', 'O+', 'Av. Alvaro Obregon 2500 sur', 'Lomas del Bosque',  'Culiacan', '6679968980'),
+(4, 'Erick', 'Hernandez', 'Vallejo', '1999-03-15', 'M', 'B-', 'Rio de Janeiro 330', 'Alta Vista', 'Monterrey', '8688207790'),
 (5, 'Armando', 'Roque', 'Rodriguez', '1972-09-06', 'M', 'O+', 'Ricardo Margain 444', 'Zona Campestre', 'San Pedro', '8111111111'),
 (6, 'José', 'Villasana', 'Rosas', '1949-11-05', 'M', 'A+', 'Heimstrasse 10', 'Kreuzberg', 'Berlin', '4910101010');
 
