@@ -1170,14 +1170,14 @@ VALUES (1, 'Armando', 'Roque', 'Villasana', '2000-05-13', 'M', 'O+', 'Ricardo Ma
 
 -- crear historiales de los pacientes
 INSERT INTO historial (historialID, pacienteID, fechaUltimaConsulta, fechaUltimaActualizacion, horasEjercicio, fumador, tomador, horasSuenio, calidadSuenio)
-VALUES (1, 1, '2020-01-24', '2020-01-27', 5, FALSE, FALSE, 8, 'Bueno'),
-(2, 2, '2020-01-25', '2020-01-28', 3, FALSE, TRUE, 7, 'Regular'),
-(3, 3, '2020-01-15','2020-01-27', 5, FALSE, TRUE, 7, 'Regular'),
-(4, 4, '2020-01-26', '2020-01-29', 2, FALSE, FALSE, 6, 'Regular'),
-(5, 5, NULL, '2020-01-30', 5, FALSE, TRUE, 7, 'Bueno'),
-(6, 6, NULL, '2019-12-3', 4, FALSE, TRUE, 6, 'Regular'),
-(7, 7, '2017-09-06', '2017-09-07', '12', FALSE, FALSE, 8, 'Regular'),
-(8, 8, '2018-10-12', '2018-10-13', '8', FALSE, FALSE, 10, 'Regular');
+VALUES (1, 1, '2020-01-24', '2020-01-27', 5, '0', '0', 8, 'Bueno'),
+(2, 2, '2020-01-25', '2020-01-28', 3, '0', '1', 7, 'Regular'),
+(3, 3, '2020-01-15','2020-01-27', 5, '0', '1', 7, 'Regular'),
+(4, 4, '2020-01-26', '2020-01-29', 2, '0', '0', 6, 'Regular'),
+(5, 5, NULL, '2020-01-30', 5, '0', '1', 7, 'Bueno'),
+(6, 6, NULL, '2019-12-3', 4, '0', '1', 6, 'Regular'),
+(7, 7, '2017-09-06', '2017-09-07', '12', '0', '0', 8, 'Regular'),
+(8, 8, '2018-10-12', '2018-10-13', '8', '0', '0', 10, 'Regular');
 
 
 -- crear seguros médicos

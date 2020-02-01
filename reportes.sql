@@ -16,8 +16,8 @@ DROP PROCEDURE IF EXISTS datosGeneralesPaciente;
 CREATE PROCEDURE datosGeneralesPaciente(IN p_nombre VARCHAR(100), IN p_ID INT)
 BEGIN
     SELECT P.pacienteID AS ID, CONCAT(P.nombrePaciente, ' ', P.apellidoPaternoPaciente, ' ', P.apellidoMaternoPaciente) AS nombrePaciente, TIMESTAMPDIFF(year, P.fechaNacimientoPaciente, CURDATE()) AS edadPaciente, P.generoPaciente, P.tipoSangrePaciente, CONCAT(P.callePaciente, ', Col. ', P.coloniaPaciente, ', ', P.ciudadPaciente) AS direccionPaciente, P.telefonoPaciente,
-           CASE WHEN H.fumador = 0 THEN 'No' ELSE 'Si' END AS fumador,
-           CASE WHEN H.tomador = 0 THEN 'No' ELSE 'Si' END AS tomador,
+           CASE WHEN H.fumador = '0' THEN 'No' ELSE 'Si' END AS fumador,
+           CASE WHEN H.tomador = '0' THEN 'No' ELSE 'Si' END AS tomador,
            H.horasSuenio, H.calidadSuenio, H.horasEjercicio, IFNULL(H.fechaUltimaConsulta, 'No registrado') AS fechaUltimaConsulta, H.fechaUltimaActualizacion
     FROM paciente AS P
     JOIN historial H on P.pacienteID = H.pacienteID
