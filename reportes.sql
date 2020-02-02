@@ -1,14 +1,3 @@
-DROP procedure IF EXISTS numeroConsultasPaciente;
-DROP procedure IF EXISTS numeroConsultasPacientePorNombre;
-DROP procedure IF EXISTS numeroVecesMedicamentoRecetado;
-DROP PROCEDURE IF EXISTS detalleConsultasPorFecha;
-
-
-
-DROP PROCEDURE IF EXISTS numeroCasosEnfermedades;
-DROP PROCEDURE IF EXISTS numeroCasosEnfermedadesBusqueda;
-
-
 -- 1. ExpedientePaciente
 
 -- 1.1 Datos Generales
@@ -39,9 +28,7 @@ BEGIN
     JOIN doctor AS D ON C.doctorID = D.doctorID
     LEFT JOIN seguroMedico sM on C.numeroPoliza = sM.numeroPoliza
     LEFT JOIN consultaDiagnosticaEnfermedad cDE on C.consultaID = cDE.consultaID
-    LEFT JOIN enfermedad e on cDE.enfermedadID = e.enfermedadID
     LEFT JOIN consultaRecetaMedicamento cRM on C.consultaID = cRM.consultaID
-    LEFT JOIN medicamento m on cRM.medicamentoID = m.medicamentoID
     WHERE CASE
         WHEN p_nombre = '' THEN P.pacienteID = p_ID
         ELSE CONCAT(P.nombrePaciente, ' ', P.apellidoPaternoPaciente, ' ', P.apellidoMaternoPaciente) LIKE CONCAT('%', p_nombre, '%') OR P.pacienteID = p_ID
@@ -71,7 +58,7 @@ END;
 DROP PROCEDURE IF EXISTS detalleMedicamentosPaciente;
 CREATE PROCEDURE detalleMedicamentosPaciente(IN p_nombre VARCHAR(100), IN p_ID INT)
 BEGIN
-    SELECT C.consultaID, C.fechaConsulta, TIMESTAMPDIFF(year, fechaNacimientoPaciente, fechaConsulta) AS edadPaciente, CONCAT(nombreDoctor, ' ', apellidoDoctor) AS nombreDoctor, D.especialidadDoctor, m.medicamentoID, m.nombreMedicamento, m.sustanciaActivaMedicamento, m.miligramosMedicamento, m.presentacionMedicamento, IFNULL(m.usoMedicamento, 'No registrado') AS usoMedicamento, fechaInicioReceta, fechaFinReceta, cRM.dosisReceta AS dosis
+    SELECT C.consultaID, C.fechaConsulta, TIMESTAMPDIFF(year, fechaNacimientoPaciente, fechaConsulta) AS edadPaciente, CONCAT(nombreDoctor, ' ', apellidoDoctor) AS nombreDoctor, D.especialidadDoctor, m.medicamentoID, m.nombreMedicamento, m.sustanciaActivaMedicamento, m.miligramosMedicamento, IFNULL(m.presentacionMedicamento, 'No definido') AS presentacionMedicamento, IFNULL(m.usoMedicamento, 'No registrado') AS usoMedicamento, fechaInicioReceta, fechaFinReceta, cRM.dosisReceta AS dosis
     FROM paciente AS P
     JOIN consulta AS C ON P.pacienteID = C.pacienteID
     JOIN doctor AS D ON C.doctorID = D.doctorID
@@ -110,56 +97,67 @@ END;
 -- FALTA
 
 -- 2.1 Detalle de un examen específico, con sus preguntas y resultados
+-- FALTA
 
+-- Resto de queries (ponerse creativos)
 
--- Resto de queries ponerse creativos
-
+-- 3. Lista de pacientes con su número de consultas
+DROP procedure IF EXISTS numeroConsultasPaciente;
 CREATE PROCEDURE numeroConsultasPaciente()
 BEGIN
-    SELECT CONCAT(nombrePaciente, ' ', apellidoPaternoPaciente, ' ', apellidoMaternoPaciente) AS nombrePaciente, TIMESTAMPDIFF(year, fechaNacimientoPaciente, CURDATE()) AS edadPaciente, COUNT(consultaID) AS numeroConsultas
+    SELECT CONCAT(nombrePaciente, ' ', apellidoPaternoPaciente, ' ', apellidoMaternoPaciente) AS nombrePaciente, TIMESTAMPDIFF(year, fechaNacimientoPaciente, CURDATE()) AS edadPaciente, COUNT(consultaID) AS numeroConsultas, H.fechaUltimaConsulta
     FROM paciente AS P
+    JOIN historial H on P.pacienteID = H.pacienteID
     JOIN consulta AS C ON P.pacienteID = C.pacienteID
-    GROUP BY nombrePaciente, apellidoPaternoPaciente, apellidoMaternoPaciente, TIMESTAMPDIFF(year, fechaNacimientoPaciente, CURDATE());
+    GROUP BY nombrePaciente, apellidoPaternoPaciente, apellidoMaternoPaciente, edadPaciente, fechaUltimaConsulta
+    ORDER BY numeroConsultas;
 END;
 
--- pidiendo nombres
-CREATE PROCEDURE numeroConsultasPacientePorNombre(IN p_nombre VARCHAR(100), IN p_apellidoPaterno VARCHAR(100), IN p_apellidoMaterno VARCHAR(100), IN p_ID INT)
-BEGIN
-    SELECT CONCAT(nombrePaciente, ' ', apellidoPaternoPaciente, ' ', apellidoMaternoPaciente) AS nombrePaciente, TIMESTAMPDIFF(year, fechaNacimientoPaciente, CURDATE()) AS edadPaciente, COUNT(consultaID) AS numConsultas
-    FROM paciente AS P
-    JOIN consulta AS C ON P.pacienteID = C.pacienteID
-    WHERE (P.apellidoPaternoPaciente = p_apellidoPaterno AND P.apellidoMaternoPaciente = p_apellidoMaterno AND P.nombrePaciente = p_nombre) OR P.pacienteID = p_ID
-    GROUP BY nombrePaciente, apellidoPaternoPaciente, apellidoMaternoPaciente, TIMESTAMPDIFF(year, fechaNacimientoPaciente, CURDATE());
-END;
 
--- 2. Nombre Medicamento, Num Veces Recetado de mayor a menor
-
--- todos
+-- 4. Nombre Medicamento, Número de Veces Recetado de mayor a menor
+DROP PROCEDURE IF EXISTS numeroVecesMedicamentoRecetado;
 CREATE PROCEDURE numeroVecesMedicamentoRecetado()
 BEGIN
-    SELECT M.medicamentoID AS ID, M.nombreMedicamento AS nombre, M.presentacionMedicamento AS presentacion, M.miligramosMedicamento AS miligramos, M.sustanciaActivaMedicamento AS sustanciaActiva, IFNULL(M.usoMedicamento, 'No registrado') AS uso, M.numeroMedicamento AS numero, COUNT(*) AS numeroVecesRecetado
+    SELECT M.medicamentoID AS ID, M.nombreMedicamento AS nombre, IFNULL(M.presentacionMedicamento, 'No definido') AS presentacion, M.miligramosMedicamento AS miligramos, M.sustanciaActivaMedicamento AS sustanciaActiva, IFNULL(M.usoMedicamento, 'No registrado') AS uso, M.numeroMedicamento AS numero, COUNT(*) AS numeroVecesRecetado
     FROM medicamento AS M
     JOIN consultaRecetaMedicamento AS CRM ON M.medicamentoID = CRM.medicamentoID
-    GROUP BY M.medicamentoID ,M.nombreMedicamento, M.presentacionMedicamento, M.miligramosMedicamento, M.sustanciaActivaMedicamento, M.usoMedicamento, M.numeroMedicamento
+    GROUP BY M.medicamentoID, M.nombreMedicamento, M.presentacionMedicamento, M.miligramosMedicamento, M.sustanciaActivaMedicamento, M.usoMedicamento, M.numeroMedicamento
     ORDER BY numeroVecesRecetado DESC;
 END;
 
+-- 5. Nombre Medicamento, Número de Veces Recetado por búsqueda
+DROP PROCEDURE IF EXISTS numeroVecesMedicamentoRecetadoBusqueda;
+CREATE PROCEDURE numeroVecesMedicamentoRecetadoBusqueda(IN m_dato VARCHAR(500), IN m_ID INT)
+BEGIN
+    SELECT M.medicamentoID AS ID, M.nombreMedicamento AS nombre, IFNULL(M.presentacionMedicamento, 'No definido') AS presentacion, M.miligramosMedicamento AS miligramos, M.sustanciaActivaMedicamento AS sustanciaActiva, IFNULL(M.usoMedicamento, 'No registrado') AS uso, M.numeroMedicamento AS numero, IFNULL(COUNT(CRM.consultaID), 0) AS numeroVecesRecetado
+    FROM medicamento AS M
+    LEFT JOIN consultaRecetaMedicamento AS CRM ON M.medicamentoID = CRM.medicamentoID
+    WHERE CASE
+        WHEN m_dato = '' THEN M.medicamentoID = m_ID
+        ELSE M.nombreMedicamento LIKE CONCAT('%', m_dato, '%') OR M.presentacionMedicamento = m_dato OR M.miligramosMedicamento = m_dato OR M.sustanciaActivaMedicamento LIKE CONCAT('%', m_dato, '%') OR M.usoMedicamento LIKE CONCAT('%', m_dato, '%') OR M.numeroMedicamento = m_dato OR M.medicamentoID = m_ID
+    END
+    GROUP BY M.medicamentoID, M.nombreMedicamento, M.presentacionMedicamento, M.miligramosMedicamento, M.sustanciaActivaMedicamento, M.usoMedicamento, M.numeroMedicamento
+    ORDER BY numeroVecesRecetado DESC;
+END;
 
-
--- 4. Fecha inicio/fin Detalle paciente, nombre paciente, address, birthdate, todo lo del punto 4
+-- 6. Búsqueda de consultas por Fecha inicio/fin
+DROP PROCEDURE IF EXISTS detalleConsultasPorFecha;
 CREATE PROCEDURE detalleConsultasPorFecha(IN fecha_inicio DATE, IN fecha_fin DATE)
 BEGIN
-    SELECT fechaConsulta, CONCAT(nombrePaciente, ' ', apellidoPaternoPaciente, ' ', apellidoMaternoPaciente) AS nombrePaciente, TIMESTAMPDIFF(year, fechaNacimientoPaciente, fechaConsulta) AS edadPaciente, fechaNacimientoPaciente, CONCAT(nombreDoctor, ' ', apellidoDoctor) AS nombreDoctor, peea, notaClinica
+    SELECT C.fechaConsulta, C.consultaID, P.pacienteID, CONCAT(nombrePaciente, ' ', apellidoPaternoPaciente, ' ', apellidoMaternoPaciente) AS nombrePaciente, TIMESTAMPDIFF(year, fechaNacimientoPaciente, fechaConsulta) AS edadPaciente, fechaNacimientoPaciente, CONCAT(nombreDoctor, ' ', apellidoDoctor) AS nombreDoctor, D.especialidadDoctor, peea, notaClinica, COUNT(DISTINCT cDE.enfermedadID) AS numeroEnfermedadesDiagnosticadas, COUNT(DISTINCT cRM.medicamentoID) AS numeroMedicamentosRecetados
     FROM paciente AS P
     JOIN consulta AS C ON P.pacienteID = C.pacienteID
     JOIN doctor AS D ON C.doctorID = D.doctorID
-    WHERE fechaConsulta BETWEEN fecha_inicio AND fecha_fin;
+    LEFT JOIN consultaDiagnosticaEnfermedad cDE on C.consultaID = cDE.consultaID
+    LEFT JOIN consultaRecetaMedicamento cRM on C.consultaID = cRM.consultaID
+    WHERE fechaConsulta BETWEEN fecha_inicio AND fecha_fin
+    GROUP BY C.fechaConsulta, C.consultaID, P.pacienteID, nombrePaciente, edadPaciente, fechaNacimientoPaciente, nombreDoctor, D.especialidadDoctor, peea, notaClinica
+    ORDER BY fechaConsulta DESC;
 END;
 
--- 5. Antecedentes familiares
 
-
-
+-- 7. Desplegar número de casos de cada enfermedad
+DROP PROCEDURE IF EXISTS numeroCasosEnfermedades;
 CREATE PROCEDURE numeroCasosEnfermedades()
 BEGIN
     SELECT E.enfermedadID, E.ICD9CM, E.ICD10M, E.DSM5, COUNT(*) AS numeroCasos
@@ -168,14 +166,18 @@ BEGIN
     GROUP BY E.enfermedadID, E.ICD9CM, E.ICD10M, E.DSM5;
 END;
 
-CREATE PROCEDURE numeroCasosEnfermedadesBusqueda(IN e_DSM5 VARCHAR(500), IN e_ID INT)
+
+-- 8. Desplegar número de casos de cada enfermedad por búsqueda
+DROP PROCEDURE IF EXISTS numeroCasosEnfermedadesBusqueda;
+CREATE PROCEDURE numeroCasosEnfermedadesBusqueda(IN e_DSM5 VARCHAR(500), IN e_codigo VARCHAR(10), IN e_ID INT)
 BEGIN
-    SELECT E.enfermedadID, E.ICD9CM, E.ICD10M, E.DSM5, IFNULL(COUNT(CDE.enfermedadID), 0) AS numeroCasos
+    SELECT E.enfermedadID, IFNULL(E.ICD9CM, 'No definido') AS ICD9CM, IFNULL(E.ICD10M, 'No definido') AS ICD10CM, E.DSM5, IFNULL(COUNT(CDE.enfermedadID), 0) AS numeroCasos
     FROM enfermedad E
     LEFT JOIN consultaDiagnosticaEnfermedad CDE ON E.enfermedadID = CDE.enfermedadID
-    WHERE E.DSM5 LIKE CONCAT('%', e_DSM5, '%') OR E.enfermedadID = e_ID
+    WHERE CASE
+        WHEN e_DSM5 = '' THEN e_codigo = E.ICD9CM OR e_codigo = E.ICD10M OR E.enfermedadID = e_ID
+        ELSE E.DSM5 LIKE CONCAT('%', e_DSM5, '%') OR e_codigo = E.ICD9CM OR e_codigo = E.ICD10M OR E.enfermedadID = e_ID
+    END
     GROUP BY E.enfermedadID, E.ICD9CM, E.ICD10M, E.DSM5
-    ORDER BY COUNT(CDE.enfermedadID) DESC;
+    ORDER BY numeroCasos DESC;
 END;
-
-
