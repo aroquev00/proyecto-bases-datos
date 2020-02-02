@@ -2,7 +2,7 @@ DROP procedure IF EXISTS numeroConsultasPaciente;
 DROP procedure IF EXISTS numeroConsultasPacientePorNombre;
 DROP procedure IF EXISTS numeroVecesMedicamentoRecetado;
 DROP PROCEDURE IF EXISTS detalleConsultasPorFecha;
-DROP PROCEDURE IF EXISTS antecedentesFamiliares;
+
 
 
 DROP PROCEDURE IF EXISTS numeroCasosEnfermedades;
@@ -11,27 +11,29 @@ DROP PROCEDURE IF EXISTS numeroCasosEnfermedadesBusqueda;
 
 -- 1. ExpedientePaciente
 
--- Datos Generales
+-- 1.1 Datos Generales
 DROP PROCEDURE IF EXISTS datosGeneralesPaciente;
 CREATE PROCEDURE datosGeneralesPaciente(IN p_nombre VARCHAR(100), IN p_ID INT)
 BEGIN
     SELECT P.pacienteID AS ID, CONCAT(P.nombrePaciente, ' ', P.apellidoPaternoPaciente, ' ', P.apellidoMaternoPaciente) AS nombrePaciente, TIMESTAMPDIFF(year, P.fechaNacimientoPaciente, CURDATE()) AS edadPaciente, P.generoPaciente, P.tipoSangrePaciente, CONCAT(P.callePaciente, ', Col. ', P.coloniaPaciente, ', ', P.ciudadPaciente) AS direccionPaciente, P.telefonoPaciente,
            CASE WHEN H.fumador = '0' THEN 'No' ELSE 'Si' END AS fumador,
            CASE WHEN H.tomador = '0' THEN 'No' ELSE 'Si' END AS tomador,
-           H.horasSuenio, H.calidadSuenio, H.horasEjercicio, IFNULL(H.fechaUltimaConsulta, 'No registrado') AS fechaUltimaConsulta, H.fechaUltimaActualizacion
+           H.horasSuenio, H.calidadSuenio, H.horasEjercicio, COUNT(c.consultaID) AS numeroConsultas, IFNULL(H.fechaUltimaConsulta, 'No registrado') AS fechaUltimaConsulta, H.fechaUltimaActualizacion
     FROM paciente AS P
     JOIN historial H on P.pacienteID = H.pacienteID
+    JOIN consulta c on P.pacienteID = c.pacienteID
     WHERE CASE
         WHEN p_nombre = '' THEN P.pacienteID = p_ID
         ELSE CONCAT(P.nombrePaciente, ' ', P.apellidoPaternoPaciente, ' ', P.apellidoMaternoPaciente) LIKE CONCAT('%', p_nombre, '%') OR P.pacienteID = p_ID
-        END;
+        END
+    GROUP BY P.pacienteID, nombrePaciente, edadPaciente, P.generoPaciente, P.tipoSangrePaciente, direccionPaciente, P.telefonoPaciente, H.fumador, H.tomador, H.horasSuenio, H.calidadSuenio, H.horasEjercicio, H.fechaUltimaConsulta, H.fechaUltimaActualizacion;
 END;
 
--- Detalle de consultas
+-- 1.2 Detalle de consultas
 DROP PROCEDURE IF EXISTS detalleConsultasPaciente;
 CREATE PROCEDURE detalleConsultasPaciente(IN p_nombre VARCHAR(100), IN p_ID INT)
 BEGIN
-    SELECT C.consultaID, C.fechaConsulta, TIMESTAMPDIFF(year, fechaNacimientoPaciente, fechaConsulta) AS edadPaciente, CONCAT(nombreDoctor, ' ', apellidoDoctor) AS nombreDoctor, peea, notaClinica, e.enfermedadID, e.DSM5 AS enfermedadDiagnosticada, m.medicamentoID, m.nombreMedicamento, cRM.fechaInicioReceta, cRM.fechaFinReceta, CONCAT(sM.companiaSeguroMedico, ' Poliza: ',sM.numeroPoliza) AS aseguradora
+    SELECT C.consultaID, C.fechaConsulta, TIMESTAMPDIFF(year, fechaNacimientoPaciente, fechaConsulta) AS edadPaciente, CONCAT(nombreDoctor, ' ', apellidoDoctor) AS nombreDoctor, D.especialidadDoctor, peea, notaClinica, COUNT(DISTINCT cDE.enfermedadID) AS numeroEnfermedadesDiagnosticadas, COUNT(DISTINCT cRM.medicamentoID) AS numeroMedicamentosRecetados, IFNULL(CONCAT(sM.companiaSeguroMedico, ' Poliza: ',sM.numeroPoliza), 'Sin seguro') AS aseguradora
     FROM paciente AS P
     JOIN consulta AS C ON P.pacienteID = C.pacienteID
     JOIN doctor AS D ON C.doctorID = D.doctorID
@@ -43,13 +45,75 @@ BEGIN
     WHERE CASE
         WHEN p_nombre = '' THEN P.pacienteID = p_ID
         ELSE CONCAT(P.nombrePaciente, ' ', P.apellidoPaternoPaciente, ' ', P.apellidoMaternoPaciente) LIKE CONCAT('%', p_nombre, '%') OR P.pacienteID = p_ID
+        END
+    GROUP BY C.consultaID, C.fechaConsulta, edadPaciente, nombreDoctor, D.especialidadDoctor, peea, notaClinica, aseguradora
+    ORDER BY C.fechaConsulta DESC;
+END;
+
+-- 1.3 Detalle enefermedades diagnosticadas
+DROP PROCEDURE IF EXISTS detalleEnfermedadesPaciente;
+CREATE PROCEDURE detalleEnfermedadesPaciente(IN p_nombre VARCHAR(100), IN p_ID INT)
+BEGIN
+    SELECT C.consultaID, C.fechaConsulta, TIMESTAMPDIFF(year, fechaNacimientoPaciente, fechaConsulta) AS edadPaciente, CONCAT(nombreDoctor, ' ', apellidoDoctor) AS nombreDoctor, D.especialidadDoctor, e.enfermedadID, e.DSM5, e.ICD9CM, e.ICD10M
+    FROM paciente AS P
+    JOIN consulta AS C ON P.pacienteID = C.pacienteID
+    JOIN doctor AS D ON C.doctorID = D.doctorID
+    JOIN consultaDiagnosticaEnfermedad cDE on C.consultaID = cDE.consultaID
+    JOIN enfermedad e on cDE.enfermedadID = e.enfermedadID
+    WHERE CASE
+        WHEN p_nombre = '' THEN P.pacienteID = p_ID
+        ELSE CONCAT(P.nombrePaciente, ' ', P.apellidoPaternoPaciente, ' ', P.apellidoMaternoPaciente) LIKE CONCAT('%', p_nombre, '%') OR P.pacienteID = p_ID
+        END
+    ORDER BY C.fechaConsulta DESC;
+END;
+
+-- 1.4 Detalle medicamentos recetados
+DROP PROCEDURE IF EXISTS detalleMedicamentosPaciente;
+CREATE PROCEDURE detalleMedicamentosPaciente(IN p_nombre VARCHAR(100), IN p_ID INT)
+BEGIN
+    SELECT C.consultaID, C.fechaConsulta, TIMESTAMPDIFF(year, fechaNacimientoPaciente, fechaConsulta) AS edadPaciente, CONCAT(nombreDoctor, ' ', apellidoDoctor) AS nombreDoctor, D.especialidadDoctor, m.medicamentoID, m.nombreMedicamento, m.sustanciaActivaMedicamento, m.miligramosMedicamento, m.presentacionMedicamento, IFNULL(m.usoMedicamento, 'No registrado') AS usoMedicamento, fechaInicioReceta, fechaFinReceta, cRM.dosisReceta AS dosis
+    FROM paciente AS P
+    JOIN consulta AS C ON P.pacienteID = C.pacienteID
+    JOIN doctor AS D ON C.doctorID = D.doctorID
+    JOIN consultaRecetaMedicamento cRM on C.consultaID = cRM.consultaID
+    JOIN medicamento m on cRM.medicamentoID = m.medicamentoID
+    WHERE CASE
+        WHEN p_nombre = '' THEN P.pacienteID = p_ID
+        ELSE CONCAT(P.nombrePaciente, ' ', P.apellidoPaternoPaciente, ' ', P.apellidoMaternoPaciente) LIKE CONCAT('%', p_nombre, '%') OR P.pacienteID = p_ID
         END;
-end;
+END;
+
+-- 1.5 Resultados de exámenes
+-- FALTA
 
 
--- 1. Nombre Paciente, NumConsultas
+-- 1.6 Antecedentes familiares
+DROP PROCEDURE IF EXISTS antecedentesFamiliares;
+CREATE PROCEDURE antecedentesFamiliares(IN p_nombre VARCHAR(100), IN p_ID INT)
+BEGIN
+    SELECT CONCAT(F.nombrePaciente, ' ', F.apellidoPaternoPaciente, ' ', F.apellidoMaternoPaciente) AS nombreFamiliar, AF.parentesco, IEPF.enfermedadID AS enfermedadID, IEPF.DSM5 AS enfermedad, EPF.fechaEnfermedad, TIMESTAMPDIFF(year, F.fechaNacimientoPaciente, EPF.fechaEnfermedad) AS edadAlPadecer, EPF.tratamientoEnfermedadPrevia AS tratamientoRecibido
+    FROM paciente AS P
+    JOIN historial AS HP ON P.pacienteID = HP.pacienteID
+    JOIN antecedenteFamiliar AS AF ON HP.historialID = AF.historialPacienteID
+    JOIN historial AS HF ON AF.historialFamiliarID = HF.historialID
+    JOIN paciente AS F ON HF.pacienteID = F.pacienteID
+    JOIN enfermedadPrevia AS EPF ON HF.historialID = EPF.historialID
+    JOIN enfermedad AS IEPF ON EPF.enfermedadPreviaID = IEPF.enfermedadID
+    WHERE CASE
+        WHEN p_nombre = '' THEN P.pacienteID = p_ID
+        ELSE CONCAT(P.nombrePaciente, ' ', P.apellidoPaternoPaciente, ' ', P.apellidoMaternoPaciente) LIKE CONCAT('%', p_nombre, '%') OR P.pacienteID = p_ID
+        END
+    ORDER BY nombreFamiliar, fechaEnfermedad DESC;
+END;
 
--- todos
+-- 2 Detalle de exámenes por paciente
+-- FALTA
+
+-- 2.1 Detalle de un examen específico, con sus preguntas y resultados
+
+
+-- Resto de queries ponerse creativos
+
 CREATE PROCEDURE numeroConsultasPaciente()
 BEGIN
     SELECT CONCAT(nombrePaciente, ' ', apellidoPaternoPaciente, ' ', apellidoMaternoPaciente) AS nombrePaciente, TIMESTAMPDIFF(year, fechaNacimientoPaciente, CURDATE()) AS edadPaciente, COUNT(consultaID) AS numeroConsultas
@@ -93,18 +157,7 @@ BEGIN
 END;
 
 -- 5. Antecedentes familiares
-CREATE PROCEDURE antecedentesFamiliares(IN p_nombre VARCHAR(100), IN p_apellidoPaterno VARCHAR(100), IN p_apellidoMaterno VARCHAR(100), IN p_ID INT)
-BEGIN
-    SELECT CONCAT(F.nombrePaciente, ' ', F.apellidoPaternoPaciente, ' ', F.apellidoMaternoPaciente) AS nombreFamiliar, AF.parentesco AS parentesco, IEPF.DSM5 AS enfermedad, EPF.fechaEnfermedad, TIMESTAMPDIFF(year, F.fechaNacimientoPaciente, EPF.fechaEnfermedad) AS edadAlPadecer, EPF.tratamientoEnfermedadPrevia AS tratamientoRecibido
-    FROM paciente AS P
-    JOIN historial AS HP ON P.pacienteID = HP.pacienteID
-    JOIN antecedenteFamiliar AS AF ON HP.historialID = AF.historialPacienteID
-    JOIN historial AS HF ON AF.historialFamiliarID = HF.historialID
-    JOIN paciente AS F ON HF.pacienteID = F.pacienteID
-    JOIN enfermedadPrevia AS EPF ON HF.historialID = EPF.historialID
-    JOIN enfermedad AS IEPF ON EPF.enfermedadPreviaID = IEPF.enfermedadID
-    WHERE (P.apellidoPaternoPaciente = p_apellidoPaterno AND P.apellidoMaternoPaciente = p_apellidoMaterno AND P.nombrePaciente = p_nombre) OR P.pacienteID = p_ID;
-END;
+
 
 
 CREATE PROCEDURE numeroCasosEnfermedades()
