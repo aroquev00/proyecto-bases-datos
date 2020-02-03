@@ -44,20 +44,15 @@ CREATE TABLE historial (
     fechaUltimaConsulta DATE,
     fechaUltimaActualizacion DATE,
     horasEjercicio INT,
-    fumador BOOLEAN,
-    tomador BOOLEAN,
+    fumador CHAR(1),
+    tomador CHAR(1),
     horasSuenio INT,
     calidadSuenio VARCHAR(10),
     PRIMARY KEY (historialID),
     FOREIGN KEY(pacienteID) REFERENCES paciente(pacienteID)
 );
 
-CREATE TABLE sintoma (
-    sintomaID INT,
-    nombreSintoma VARCHAR(20),
-    descripcionSintoma VARCHAR(1000),
-    PRIMARY KEY (sintomaID)
-);
+
 
 CREATE TABLE doctor(
   doctorID int,
@@ -135,15 +130,6 @@ CREATE TABLE antecedenteFamiliar (
     FOREIGN KEY (historialFamiliarID) REFERENCES paciente(pacienteID)
 );
 
-
-CREATE TABLE consultaReportaSintoma (
-    consultaID INT,
-    sintomaID INT,
-    PRIMARY KEY (consultaID, sintomaID),
-    FOREIGN KEY (consultaID) REFERENCES consulta(consultaID),
-    FOREIGN KEY (sintomaID) REFERENCES sintoma(sintomaID)
-);
-
 CREATE TABLE examen (
 examenID INT,
 tipoExamen VARCHAR(20),
@@ -185,5 +171,4 @@ PRIMARY KEY (respuestaID),
 FOREIGN KEY (examenID) references examen(examenID),
 FOREIGN KEY (preguntaID) references pregunta(preguntaID)
 );
-
 END;
