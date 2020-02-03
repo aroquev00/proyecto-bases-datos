@@ -2,7 +2,6 @@ DELETE FROM medicamento;
 DELETE FROM enfermedad;
 DELETE FROM paciente;
 DELETE FROM historial;
-DELETE FROM sintoma;
 DELETE FROM doctor;
 DELETE FROM seguroMedico;
 DELETE FROM consulta;
@@ -10,7 +9,6 @@ DELETE FROM consultaRecetaMedicamento;
 DELETE FROM consultaDiagnosticaEnfermedad;
 DELETE FROM enfermedadPrevia;
 DELETE FROM antecedenteFamiliar;
-DELETE FROM consultaReportaSintoma;
 DELETE FROM examen;
 DELETE FROM historialTieneExamen;
 DELETE FROM pregunta;
@@ -1192,11 +1190,11 @@ VALUES('87923618', 1, '2022-06-15', '2015-06-15', 'GNP', 20000),
 
 -- consultas de Armando
 INSERT INTO consulta (consultaID, pacienteID, doctorID, numeroPoliza, fechaConsulta, pesoEnConsulta, estaturaEnConsulta, notaClinica, peea)
-VALUES (1, 1, 1, '87923618', '2019-01-27', 62, 1.7, 'nC 1', 'peea 1'),
-(2, 1, 2, '3517395', '2019-03-07', 62, 1.7, 'nC 2', 'peea 2'),
-(3, 1, 1, '87923618', '2019-06-20', 62, 1.7, 'nC 3', 'peea 3'),
-(4, 1, 2, '3517395', '2019-11-09', 62, 1.7, 'nC 4', 'peea 4'),
-(5, 1, 1, '87923618', '2020-01-24', 62, 1.7, 'nC 5', 'peea 5');
+VALUES (1, 1, 1, '87923618', '2019-01-27', 62, 1.7, 'El paciente sufre de altos niveles de estres, requiere de reposo, pero no requiere de ningun medicamento', 'El paciente presenta dolor de cabeza desde hace 3 dias y fatiga continua.'),
+(2, 1, 2, '3517395', '2019-03-07', 62, 1.7, 'El paciente presenta estres alto, y un problema de aprendizaje, se le dara medicamento para tratarlo', 'El paciente tiene problemas para concentrarse en clase y ha bajado su rendimiento académico desde hace 1 semestre.'),
+(3, 1, 1, '87923618', '2019-06-20', 62, 1.7, 'El paciente presenta peso adecuado, se le dio una rutina alimenticia para mantenerla, asi como medicamento para regular la ansiedad', 'El paciente presenta ansiedad al decidir que comer por miedo a aumentar o bajar de peso desmesuradamente desde hace 1 mes'),
+(4, 1, 2, '3517395', '2019-11-09', 62, 1.7, 'El paciente se encuentra con nivel medio de estres, requiere algunos cambios de su rutina y reposo', 'El paciente presenta dificultad para concentrarse en sus estudios y presenta niveles bajos de energia desde hace 2 semanas'),
+(5, 1, 1, '87923618', '2020-01-24', 62, 1.7, 'El paciente se encuentra con peso bajo y se le dara medicamento para regularlo', 'El paciente ha dejado de comer algunos alimentos por miedo a subir de peso desde hace 1 mes y ha bajado de peso, se encuentra con bajos niveles de energia y rendimiento durante su rutina diaria');
 
 -- consultas de Emilio
 INSERT INTO consulta (consultaID, pacienteID, doctorID, numeroPoliza, fechaConsulta, pesoEnConsulta, estaturaEnConsulta, notaClinica, peea)
@@ -1274,7 +1272,5 @@ VALUES (1, 5, 'Padre'),
 (3, 7, 'Padre'),
 (3, 8, 'Madre');
 
--- agregar síntomas
-INSERT INTO sintoma(sintomaID, nombreSintoma, descripcionSintoma)
-VALUES (1, 'Dolor de cabeza', 'Un dolor de cabeza es un dolor o molestia en la cabeza, el cuero cabelludo o el cuello.'),
-(2, 'Dolor de estomago', 'Dolor desde el interior del abdomen o de la pared muscular externa, que va desde leve y temporal a intenso.');
+
+-- agregar lo de los exámenes psicológicos

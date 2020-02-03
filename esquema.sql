@@ -52,12 +52,7 @@ CREATE TABLE historial (
     FOREIGN KEY(pacienteID) REFERENCES paciente(pacienteID)
 );
 
-CREATE TABLE sintoma (
-    sintomaID INT,
-    nombreSintoma VARCHAR(20),
-    descripcionSintoma VARCHAR(1000),
-    PRIMARY KEY (sintomaID)
-);
+
 
 CREATE TABLE doctor(
   doctorID int,
@@ -133,15 +128,6 @@ CREATE TABLE antecedenteFamiliar (
     PRIMARY KEY (historialPacienteID, historialFamiliarID),
     FOREIGN KEY (historialPacienteID) REFERENCES paciente(pacienteID),
     FOREIGN KEY (historialFamiliarID) REFERENCES paciente(pacienteID)
-);
-
-
-CREATE TABLE consultaReportaSintoma (
-    consultaID INT,
-    sintomaID INT,
-    PRIMARY KEY (consultaID, sintomaID),
-    FOREIGN KEY (consultaID) REFERENCES consulta(consultaID),
-    FOREIGN KEY (sintomaID) REFERENCES sintoma(sintomaID)
 );
 
 CREATE TABLE examen (
