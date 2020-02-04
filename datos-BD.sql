@@ -1156,15 +1156,15 @@ VALUES (1, 'C1', 'Juan', 'Perez', 'Nutriologo'),
 (3, 'C3', 'Ruben', 'Lopez', 'Pediatra');
 
 -- crear pacientes
-INSERT INTO paciente (pacienteID, nombrePaciente, apellidoPaternoPaciente, apellidoMaternoPaciente, fechaNacimientoPaciente, generoPaciente, tipoSangrePaciente, callePaciente, coloniaPaciente, ciudadPaciente, telefonoPaciente)
+INSERT INTO paciente (pacienteID, nombrePaciente, apellidoPaternoPaciente, apellidoMaternoPaciente, fechaNacimientoPaciente, generoPaciente, tipoSangrePaciente, callePaciente, coloniaPaciente, ciudadPaciente, telefonoPaciente, emailPaciente)
 VALUES (1, 'Armando', 'Roque', 'Villasana', '2000-05-13', 'M', 'O+', 'Ricardo Margain 444', 'Zona Campestre', 'San Pedro', '8100000000'),
-(2, 'Emilio', 'Villarreal', 'Flores', '1998-10-11', 'M', 'B+', 'Av.Roberto Gatza Sada 150', 'Lomas del Valle', 'San Pedro', '8183096093'),
-(3, 'Nestor', 'Rubio', 'Lopez', '1998-06-29', 'M', 'O+', 'Av. Alvaro Obregon 2500 sur', 'Lomas del Bosque',  'Culiacan', '6679968980'),
+(2, 'Emilio', 'Villarreal', 'Flores', '1998-10-11', 'M', 'B+', 'Av.Roberto Gatza Sada 150', 'Lomas del Valle', 'San Pedro', '8183096093', 'emilio.villarrealf@gmail.com'),
+(3, 'Nestor', 'Rubio', 'Lopez', '1998-06-29', 'M', 'O+', 'Av. Alvaro Obregon 2500 sur', 'Lomas del Bosque',  'Culiacan', '6679968980', 'nestorulo29@gmail.com'),
 (4, 'Erick', 'Hernandez', 'Vallejo', '1999-03-15', 'M', 'B-', 'Rio de Janeiro 330', 'Alta Vista', 'Monterrey', '8688207790'),
 (5, 'Armando', 'Roque', 'Rodriguez', '1972-09-06', 'M', 'O+', 'Ricardo Margain 444', 'Zona Campestre', 'San Pedro', '8111111111'),
 (6, 'José', 'Villasana', 'Rosas', '1949-11-05', 'M', 'A+', 'Heimstrasse 10', 'Kreuzberg', 'Berlin', '4910101010'),
-(7, 'Jose', 'Rubio', 'Luque', '1961-12-27', 'M', 'A+', 'Av. Alvaro Obregon 2500', 'Lomas del Bosque', 'Culiacan', '6671820303'),
-(8, 'Indelisa', 'Lopez', 'Verdugo', '1962-07-04', 'F', 'B-', 'Av. Alvaro Obregon 2500', 'Lomas del Bosque', 'Culiacan', '6671820303');
+(7, 'Jose', 'Rubio', 'Luque', '1961-12-27', 'M', 'A+', 'Av. Alvaro Obregon 2500', 'Lomas del Bosque', 'Culiacan', '6671820303', 'jose@fanes.com.mx'),
+(8, 'Indelisa', 'Lopez', 'Verdugo', '1962-07-04', 'F', 'B-', 'Av. Alvaro Obregon 2500', 'Lomas del Bosque', 'Culiacan', '6671820303', 'inde545@hotmail.com');
 
 -- crear historiales de los pacientes
 INSERT INTO historial (historialID, pacienteID, fechaUltimaConsulta, fechaUltimaActualizacion, horasEjercicio, fumador, tomador, horasSuenio, calidadSuenio)
@@ -1198,11 +1198,11 @@ VALUES (1, 1, 1, '87923618', '2019-01-27', 62, 1.7, 'El paciente sufre de altos 
 
 -- consultas de Emilio
 INSERT INTO consulta (consultaID, pacienteID, doctorID, numeroPoliza, fechaConsulta, pesoEnConsulta, estaturaEnConsulta, notaClinica, peea)
-VALUES (6, 2, 1, NULL, '2019-02-27', 60, 1.7, 'nC 6', 'peea 6'),
-(7, 2, 2, NULL, '2019-04-07', 61, 1.7, 'nC 7', 'peea 7'),
-(8, 2, 3, NULL, '2019-01-20', 60, 1.7, 'nC 8', 'peea 8'),
-(9, 2, 2, NULL, '2019-10-09', 60, 1.7, 'nC 9', 'peea 9'),
-(10, 2, 1, NULL, '2020-11-24', 59, 1.7, 'nC 10', 'peea 10');
+VALUES (6, 2, 1, NULL, '2019-02-27', 60, 1.7, 'El paciente sufre de altos niveles de ansiedad', 'El paciente presenta dolor de cabeza y nauseas'),
+(7, 2, 2, NULL, '2019-04-07', 61, 1.7, 'El paciente sufre de pocos niveles de nauseas', 'El paciente presenta dolor de cabeza y falta de apetito'),
+(8, 2, 3, NULL, '2019-01-20', 60, 1.7, 'El paciente sufre de altos niveles de estres', 'El paciente presenta dolor de cabeza'),
+(9, 2, 2, NULL, '2019-10-09', 60, 1.7,'El paciente sufre de ansiedad', 'El paciente presenta dolor de cabeza, nauseas y dolor en el estomago'),
+(10, 2, 1, NULL, '2020-11-24', 59, 1.7, 'El paciente sufre de altos niveles de dolor de cabeza', 'El paciente presenta dolor en toda el area de la cabeza');
 
 -- consultas de Erick
 INSERT INTO consulta (consultaID, pacienteID, doctorID, numeroPoliza, fechaConsulta, pesoEnConsulta, estaturaEnConsulta, notaClinica, peea)
