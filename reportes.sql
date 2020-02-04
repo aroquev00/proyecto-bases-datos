@@ -210,50 +210,51 @@ BEGIN
     END
 END;
 
-
 -- 10. Desplegar pacientes que no tiene seguro
 DROP PROCEDURE IF EXISTS pacientesSinSeguro
 CREATE PROCEDURE pacientesSinSeguro()
 BEGIN
-    SELECT pacienteID, CONCAT(nombrePaciente, apellidoPaternoPaciente, apellidoMaternoPaciente), fechaNacimientoPaciente, generoPaciente, telefonoPaciente 
+    SELECT pacienteID, CONCAT(nombrePaciente, apellidoPaternoPaciente, apellidoMaternoPaciente), fechaNacimientoPaciente, generoPaciente, telefonoPaciente, CONCAT(P.callePaciente, ', Col. ', P.coloniaPaciente, ', ', P.ciudadPaciente) AS direccionPaciente 
     FROM paciente P
     JOIN seguroMedico S on P.pacienteID = S.pacienteID
     WHERE NOT EXISTS (SELECT numeroPoliza FROM seguroMedico WHERE P.pacienteID = S.pacienteID)
 END;
+
 -- 11.Desplegar pacientes que tienen cierto seguro
 DROP PROCEDURE IF EXISTS pacientesPorSeguro
 CREATE PROCEDURE pacientesPorSeguro(IN compania VARCHAR(100))
 BEGIN
-    SELECT pacienteID, CONCAT(nombrePaciente, apellidoPaternoPaciente, apellidoMaternoPaciente), fechaNacimientoPaciente, generoPaciente, telefonoPaciente, S.vigenciaSeguroMedico
+    SELECT pacienteID, CONCAT(nombrePaciente, apellidoPaternoPaciente, apellidoMaternoPaciente), fechaNacimientoPaciente, TIMESTAMPDIFF(year, fechaNacimientoPaciente, current_date) AS edad, generoPaciente, telefonoPaciente, S.numeroPoliza, S.vigenciaSeguroMedico
     FROM paciente P 
     JOIN seguroMedico S on P.pacienteID = S.pacienteID
-    WHERE S.companiaSeguroMedico === compania
+    WHERE S.companiaSeguroMedico = compania;
 END;
+
 -- 12. Desplegar los pacientes por ciudad
 DROP PROCEDURE IF EXISTS pacientesPorCiudad;
 CREATE PROCEDURE pacientesPorCiudad(IN ciudad varchar(100))
 BEGIN
-    SELECT CONCAT(nombrePaciente, ' ', apellidoPaternoPaciente, ' ', apellidoMaternoPaciente) AS nombreDelPaciente, fechaNacimientoPaciente, tipoSangrePaciente
+    SELECT CONCAT(nombrePaciente, ' ', apellidoPaternoPaciente, ' ', apellidoMaternoPaciente) AS nombreDelPaciente, fechaNacimientoPaciente, TIMESTAMPDIFF(year, fechaNacimientoPaciente, current_date) AS edad, tipoSangrePaciente, CONCAT(P.callePaciente, ', Col. ', P.coloniaPaciente, ', ', P.ciudadPaciente) AS direccionPaciente
     FROM paciente
     WHERE ciudadPaciente = ciudad
-    ORDER BY ciudadPaciente;
+    ORDER BY nombreDelPaciente;
 END;
 
 -- 13. Desplegar los pacientes por edad
 DROP PROCEDURE IF EXISTS pacientesPorEdad;
 CREATE PROCEDURE pacientesPorEdad(IN edad int)
 BEGIN
-    SELECT CONCAT(nombrePaciente, ' ', apellidoPaternoPaciente, ' ', apellidoMaternoPaciente) AS nombreDelPaciente, fechaNacimientoPaciente, tipoSangrePaciente
+    SELECT pacienteID, CONCAT(nombrePaciente, ' ', apellidoPaternoPaciente, ' ', apellidoMaternoPaciente) AS nombreDelPaciente, fechaNacimientoPaciente, TIMESTAMPDIFF(year, fechaNacimientoPaciente, current_date) AS edad, tipoSangrePaciente
     FROM paciente
     WHERE TIMESTAMPDIFF(year, fechaNacimientoPaciente, current_date) = edad
-    ORDER BY fechaNacimientoPaciente;
+    ORDER BY fechaNacimientoPaciente DESC;
 END;
 
 -- 14. Desplegar los pacientes por tipo de sangre
 DROP PROCEDURE IF EXISTS pacientesPorSangre;
 CREATE PROCEDURE pacientesPorSangre(IN sangre varchar(10))
 BEGIN
-    SELECT CONCAT(nombrePaciente, ' ', apellidoPaternoPaciente, ' ', apellidoMaternoPaciente) AS nombreDelPaciente, fechaNacimientoPaciente
+    SELECT pacienteID, CONCAT(nombrePaciente, ' ', apellidoPaternoPaciente, ' ', apellidoMaternoPaciente) AS nombreDelPaciente, fechaNacimientoPaciente
     FROM paciente
     WHERE tipoSangrePaciente = sangre
     ORDER BY tipoSangrePaciente;

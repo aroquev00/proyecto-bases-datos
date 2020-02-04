@@ -1157,12 +1157,12 @@ VALUES (1, 'C1', 'Juan', 'Perez', 'Nutriologo'),
 
 -- crear pacientes
 INSERT INTO paciente (pacienteID, nombrePaciente, apellidoPaternoPaciente, apellidoMaternoPaciente, fechaNacimientoPaciente, generoPaciente, tipoSangrePaciente, callePaciente, coloniaPaciente, ciudadPaciente, telefonoPaciente, emailPaciente)
-VALUES (1, 'Armando', 'Roque', 'Villasana', '2000-05-13', 'M', 'O+', 'Ricardo Margain 444', 'Zona Campestre', 'San Pedro', '8100000000'),
+VALUES (1, 'Armando', 'Roque', 'Villasana', '2000-05-13', 'M', 'O+', 'Ricardo Margain 444', 'Zona Campestre', 'San Pedro', '8100000000', 'A01138717@itesm.mx'),
 (2, 'Emilio', 'Villarreal', 'Flores', '1998-10-11', 'M', 'B+', 'Av.Roberto Gatza Sada 150', 'Lomas del Valle', 'San Pedro', '8183096093', 'emilio.villarrealf@gmail.com'),
 (3, 'Nestor', 'Rubio', 'Lopez', '1998-06-29', 'M', 'O+', 'Av. Alvaro Obregon 2500 sur', 'Lomas del Bosque',  'Culiacan', '6679968980', 'nestorulo29@gmail.com'),
-(4, 'Erick', 'Hernandez', 'Vallejo', '1999-03-15', 'M', 'B-', 'Rio de Janeiro 330', 'Alta Vista', 'Monterrey', '8688207790'),
-(5, 'Armando', 'Roque', 'Rodriguez', '1972-09-06', 'M', 'O+', 'Ricardo Margain 444', 'Zona Campestre', 'San Pedro', '8111111111'),
-(6, 'José', 'Villasana', 'Rosas', '1949-11-05', 'M', 'A+', 'Heimstrasse 10', 'Kreuzberg', 'Berlin', '4910101010'),
+(4, 'Erick', 'Hernandez', 'Vallejo', '1999-03-15', 'M', 'B-', 'Rio de Janeiro 330', 'Alta Vista', 'Monterrey', '8688207790', 'a00517124@itesm.mx'),
+(5, 'Armando', 'Roque', 'Rodriguez', '1972-09-06', 'M', 'O+', 'Ricardo Margain 444', 'Zona Campestre', 'San Pedro', '8111111111', 'armando@biccos.com'),
+(6, 'José', 'Villasana', 'Rosas', '1949-11-05', 'M', 'A+', 'Heimstrasse 10', 'Kreuzberg', 'Berlin', '4910101010', 'jlvr@hotmail.com'),
 (7, 'Jose', 'Rubio', 'Luque', '1961-12-27', 'M', 'A+', 'Av. Alvaro Obregon 2500', 'Lomas del Bosque', 'Culiacan', '6671820303', 'jose@fanes.com.mx'),
 (8, 'Indelisa', 'Lopez', 'Verdugo', '1962-07-04', 'F', 'B-', 'Av. Alvaro Obregon 2500', 'Lomas del Bosque', 'Culiacan', '6671820303', 'inde545@hotmail.com');
 
@@ -1214,7 +1214,7 @@ VALUES (11, 4, 1, NULL, '2019-01-03', 65, 1.8, 'nC 11', 'peea 11'),
 
 -- consultas de Nestor
 INSERT INTO consulta (consultaID, pacienteID, doctorID, numeroPoliza, fechaConsulta, pesoEnConsulta, estaturaEnConsulta, notaClinica, peea)
-VALUES (16, 3, 1, NULL, '2019-01-17', 90, 1.77, 'nC 16', 'peea 16'),
+VALUES (16, 3, 1, NULL, '2019-01-17', 90, 1.77, 'El paciente presenta dolores abdominales y estreñimiento', ''),
 (17, 3, 1, NULL, '2019-04-2', 90, 1.77, 'nC 17', 'peea 17'),
 (18, 3, 3, NULL, '2019-07-19', 90, 1.77, 'nC 18', 'peea 18'),
 (19, 3, 1, NULL, '2019-11-15', 90, 1.77, 'nC 19', 'peea 19'),
@@ -1271,6 +1271,3 @@ VALUES (1, 5, 'Padre'),
 (1, 6, 'Abuelo materno'),
 (3, 7, 'Padre'),
 (3, 8, 'Madre');
-
-
--- agregar lo de los exámenes psicológicos
