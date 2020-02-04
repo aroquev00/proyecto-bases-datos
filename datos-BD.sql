@@ -1214,11 +1214,11 @@ VALUES (11, 4, 1, NULL, '2019-01-03', 65, 1.8, 'nC 11', 'peea 11'),
 
 -- consultas de Nestor
 INSERT INTO consulta (consultaID, pacienteID, doctorID, numeroPoliza, fechaConsulta, pesoEnConsulta, estaturaEnConsulta, notaClinica, peea)
-VALUES (16, 3, 1, NULL, '2019-01-17', 90, 1.77, 'El paciente presenta dolores abdominales y estreñimiento', ''),
-(17, 3, 1, NULL, '2019-04-2', 90, 1.77, 'nC 17', 'peea 17'),
-(18, 3, 3, NULL, '2019-07-19', 90, 1.77, 'nC 18', 'peea 18'),
-(19, 3, 1, NULL, '2019-11-15', 90, 1.77, 'nC 19', 'peea 19'),
-(20, 3, 2, NULL, '2020-01-15', 90, 1.77, 'nC 20', 'peea 20');
+VALUES (16, 3, 1, NULL, '2019-01-17', 90, 1.77, 'El paciente sufre de estreñimiento y dolores abdominales', 'El paciente sufre de molestias al hacer del baño'),
+(17, 3, 1, NULL, '2019-04-2', 90, 1.77, 'El paciente sufre de falta de sueño', 'El paciente presenta dolores de cabeza y nauseas'),
+(18, 3, 3, NULL, '2019-07-19', 90, 1.77, 'El paciente no sufre de nada', 'El paciente presenta dolores en la muñeca'),
+(19, 3, 1, NULL, '2019-11-15', 90, 1.77, 'El paciente sufre de un esguince cervical y lumbagia', 'El paciente presenta inhabilidad para caminar o moverse sin sentir dolor'),
+(20, 3, 2, NULL, '2020-01-15', 90, 1.77, 'El paciente no sufre de nada', 'El paciente presenta mareos');
 
 
 
