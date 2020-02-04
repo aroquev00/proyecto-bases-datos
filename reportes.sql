@@ -22,7 +22,7 @@ END;
 DROP PROCEDURE IF EXISTS detalleConsultasPaciente;
 CREATE PROCEDURE detalleConsultasPaciente(IN p_nombre VARCHAR(100), IN p_ID INT)
 BEGIN
-    SELECT C.consultaID, C.fechaConsulta, TIMESTAMPDIFF(year, fechaNacimientoPaciente, fechaConsulta) AS edadPaciente, CONCAT(nombreDoctor, ' ', apellidoDoctor) AS nombreDoctor, D.especialidadDoctor, peea, notaClinica, COUNT(DISTINCT cDE.enfermedadID) AS numeroEnfermedadesDiagnosticadas, COUNT(DISTINCT cRM.medicamentoID) AS numeroMedicamentosRecetados, IFNULL(CONCAT(sM.companiaSeguroMedico, ' Poliza: ',sM.numeroPoliza), 'Sin seguro') AS aseguradora
+    SELECT C.consultaID, C.fechaConsulta, TIMESTAMPDIFF(year, fechaNacimientoPaciente, fechaConsulta) AS edadPaciente, C.pesoEnConsulta AS peso, C.estaturaEnConsulta AS estatura, CONCAT(nombreDoctor, ' ', apellidoDoctor) AS nombreDoctor, D.especialidadDoctor, peea, notaClinica, COUNT(DISTINCT cDE.enfermedadID) AS numeroEnfermedadesDiagnosticadas, COUNT(DISTINCT cRM.medicamentoID) AS numeroMedicamentosRecetados, IFNULL(CONCAT(sM.companiaSeguroMedico, ' Poliza: ',sM.numeroPoliza), 'Sin seguro') AS aseguradora
     FROM paciente AS P
     JOIN consulta AS C ON P.pacienteID = C.pacienteID
     JOIN doctor AS D ON C.doctorID = D.doctorID
@@ -33,7 +33,7 @@ BEGIN
         WHEN p_nombre = '' THEN P.pacienteID = p_ID
         ELSE CONCAT(P.nombrePaciente, ' ', P.apellidoPaternoPaciente, ' ', P.apellidoMaternoPaciente) LIKE CONCAT('%', p_nombre, '%') OR P.pacienteID = p_ID
         END
-    GROUP BY C.consultaID, C.fechaConsulta, edadPaciente, nombreDoctor, D.especialidadDoctor, peea, notaClinica, aseguradora
+    GROUP BY C.consultaID, C.fechaConsulta, edadPaciente, peso, estatura, nombreDoctor, D.especialidadDoctor, peea, notaClinica, aseguradora
     ORDER BY C.fechaConsulta DESC;
 END;
 
@@ -67,7 +67,8 @@ BEGIN
     WHERE CASE
         WHEN p_nombre = '' THEN P.pacienteID = p_ID
         ELSE CONCAT(P.nombrePaciente, ' ', P.apellidoPaternoPaciente, ' ', P.apellidoMaternoPaciente) LIKE CONCAT('%', p_nombre, '%') OR P.pacienteID = p_ID
-        END;
+        END
+    ORDER BY C.fechaConsulta DESC;
 END;
 
 -- 1.5 Resultados de exámenes
@@ -144,14 +145,14 @@ END;
 DROP PROCEDURE IF EXISTS detalleConsultasPorFecha;
 CREATE PROCEDURE detalleConsultasPorFecha(IN fecha_inicio DATE, IN fecha_fin DATE)
 BEGIN
-    SELECT C.fechaConsulta, C.consultaID, P.pacienteID, CONCAT(nombrePaciente, ' ', apellidoPaternoPaciente, ' ', apellidoMaternoPaciente) AS nombrePaciente, TIMESTAMPDIFF(year, fechaNacimientoPaciente, fechaConsulta) AS edadPaciente, fechaNacimientoPaciente, CONCAT(nombreDoctor, ' ', apellidoDoctor) AS nombreDoctor, D.especialidadDoctor, peea, notaClinica, COUNT(DISTINCT cDE.enfermedadID) AS numeroEnfermedadesDiagnosticadas, COUNT(DISTINCT cRM.medicamentoID) AS numeroMedicamentosRecetados
+    SELECT C.fechaConsulta, C.consultaID, P.pacienteID, CONCAT(nombrePaciente, ' ', apellidoPaternoPaciente, ' ', apellidoMaternoPaciente) AS nombrePaciente, TIMESTAMPDIFF(year, fechaNacimientoPaciente, fechaConsulta) AS edadPaciente, fechaNacimientoPaciente, C.pesoEnConsulta AS peso, C.estaturaEnConsulta AS estatura, CONCAT(nombreDoctor, ' ', apellidoDoctor) AS nombreDoctor, D.especialidadDoctor, peea, notaClinica, COUNT(DISTINCT cDE.enfermedadID) AS numeroEnfermedadesDiagnosticadas, COUNT(DISTINCT cRM.medicamentoID) AS numeroMedicamentosRecetados
     FROM paciente AS P
     JOIN consulta AS C ON P.pacienteID = C.pacienteID
     JOIN doctor AS D ON C.doctorID = D.doctorID
     LEFT JOIN consultaDiagnosticaEnfermedad cDE on C.consultaID = cDE.consultaID
     LEFT JOIN consultaRecetaMedicamento cRM on C.consultaID = cRM.consultaID
     WHERE fechaConsulta BETWEEN fecha_inicio AND fecha_fin
-    GROUP BY C.fechaConsulta, C.consultaID, P.pacienteID, nombrePaciente, edadPaciente, fechaNacimientoPaciente, nombreDoctor, D.especialidadDoctor, peea, notaClinica
+    GROUP BY C.fechaConsulta, C.consultaID, P.pacienteID, nombrePaciente, edadPaciente, fechaNacimientoPaciente, peso, estatura, nombreDoctor, D.especialidadDoctor, peea, notaClinica
     ORDER BY fechaConsulta DESC;
 END;
 
@@ -163,7 +164,8 @@ BEGIN
     SELECT E.enfermedadID, E.ICD9CM, E.ICD10M, E.DSM5, COUNT(*) AS numeroCasos
     FROM enfermedad E
     JOIN consultaDiagnosticaEnfermedad CDE ON E.enfermedadID = CDE.enfermedadID
-    GROUP BY E.enfermedadID, E.ICD9CM, E.ICD10M, E.DSM5;
+    GROUP BY E.enfermedadID, E.ICD9CM, E.ICD10M, E.DSM5
+    ORDER BY numeroCasos DESC;
 END;
 
 
