@@ -259,3 +259,37 @@ BEGIN
     WHERE tipoSangrePaciente = sangre
     ORDER BY tipoSangrePaciente;
 END;
+
+-- Transaccion para borrar a un paciente
+DROP PROCEDURE IF EXISTS deletePatient;
+CREATE PROCEDURE deletePatient(IN p_name varchar(100), p_apellidoPaterno varchar(100), p_apellidoMaterno varchar(100), IN p_id int)
+BEGIN
+    SELECT @pacienteID := P.pacienteID
+    FROM paciente P
+    WHERE P.nombrePaciente = p_name AND P.apellidoPaternoPaciente = p_apellidoPaterno AND P.apellidoMaternoPaciente = p_apellidoMaterno AND P.pacienteID = p_id;
+    START TRANSACTION;
+
+    -- delete all diagnosics
+    DELETE FROM consultaDiagnosticaEnfermedad
+    WHERE consultaID IN (SELECT consultaID FROM consulta WHERE pacienteID = @pacienteID);
+
+    -- delete all medication prescriptions
+    DELETE FROM consultaRecetaMedicamento
+    WHERE consultaID IN (SELECT consultaID FROM consulta WHERE pacienteID = @pacienteID);
+
+    -- delete all visits to doctor
+    DELETE FROM consulta
+    WHERE pacienteID = @pacienteID;
+
+    -- delete all insurance belonging to patient
+    DELETE FROM seguroMedico
+    WHERE pacienteID = @pacienteID;
+
+    -- delete previous sickness
+    DELETE FROM enfermedadPrevia
+    WHERE historialID IN (SELECT historialID FROM historial WHERE pacienteID = @pacienteID);
+
+    -- delete all exams
+
+    COMMIT;
+END;
