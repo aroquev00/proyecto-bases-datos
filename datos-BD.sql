@@ -1,19 +1,22 @@
-DELETE FROM medicamento;
-DELETE FROM enfermedad;
-DELETE FROM paciente;
-DELETE FROM historial;
-DELETE FROM doctor;
-DELETE FROM seguroMedico;
-DELETE FROM consulta;
+DELETE FROM respuesta;
+DELETE FROM instanciaExamen;
+DELETE FROM pregunta;
+DELETE FROM examen;
+DELETE FROM antecedenteFamiliar;
+DELETE FROM enfermedadPrevia;
 DELETE FROM consultaRecetaMedicamento;
 DELETE FROM consultaDiagnosticaEnfermedad;
-DELETE FROM enfermedadPrevia;
-DELETE FROM antecedenteFamiliar;
-DELETE FROM examen;
-DELETE FROM historialTieneExamen;
-DELETE FROM pregunta;
-DELETE FROM posibleRespuestas;
-DELETE FROM respuesta;
+DELETE FROM consulta;
+DELETE FROM seguroMedico;
+DELETE FROM historial;
+DELETE FROM paciente;
+DELETE FROM medicamento;
+DELETE FROM enfermedad;
+DELETE FROM doctor;
+
+
+
+
 
 -- cada uno un paciente, cada paciente 5 consultas, 3 deben tener dos enfermedades y dos medicamentos
 
@@ -1206,16 +1209,16 @@ VALUES (6, 2, 1, NULL, '2019-02-27', 60, 1.7, 'El paciente sufre de altos nivele
 
 -- consultas de Erick
 INSERT INTO consulta (consultaID, pacienteID, doctorID, numeroPoliza, fechaConsulta, pesoEnConsulta, estaturaEnConsulta, notaClinica, peea)
-VALUES (11, 4, 1, NULL, '2019-01-03', 65, 1.8, 'nC 11', 'peea 11'),
-(12, 4, 2, NULL, '2019-03-23', 65, 1.8, 'nC 12', 'peea 12'),
-(13, 4, 3, NULL, '2019-06-19', 64, 1.8, 'nC 13', 'peea 13'),
-(14, 4, 2, NULL, '2019-11-10', 65, 1.8, 'nC 14', 'peea 14'),
-(15, 4, 1, NULL, '2020-01-15', 65, 1.8, 'nC 15', 'peea 15');
+VALUES (11, 4, 1, NULL, '2019-01-03', 65, 1.8, 'El paciente presenta señales de insomnio, se le recomendaron cambios en su rutina', 'El paciente presenta problemas para conciliar el sueño desde hace dos meses'),
+(12, 4, 2, NULL, '2019-03-23', 65, 1.8, 'El paciente presenta señales de TAG, se recomendaron cambios en su rutina. Se le dara seguimiento.', 'El paciente tiene dificultades para conecentrarse en una tarea ademas esta en un estado de alerta constante'),
+(13, 4, 3, NULL, '2019-06-19', 64, 1.8, 'El paciente presenta otros sintomas de TAG, se recetaron medicamentos', 'El paciente tiene nauseas y dolor de cabeza constantes desde hace 3 semanas'),
+(14, 4, 2, NULL, '2019-11-10', 65, 1.8, 'El paciente no presento una mejora considerable, se recomendo asistir al psicologo', 'El paciente presenta presenta dificultades para conciliar el sueño y nauseas constantes'),
+(15, 4, 1, NULL, '2020-01-15', 65, 1.8, 'El paciente se encuentra en mejor estado de salud, se seguira con el tratamiento', 'El paciente presenta ligero dolor de cabeza');
 
 -- consultas de Nestor
 INSERT INTO consulta (consultaID, pacienteID, doctorID, numeroPoliza, fechaConsulta, pesoEnConsulta, estaturaEnConsulta, notaClinica, peea)
 VALUES (16, 3, 1, NULL, '2019-01-17', 90, 1.77, 'El paciente sufre de estreñimiento y dolores abdominales', 'El paciente sufre de molestias al hacer del baño'),
-(17, 3, 1, NULL, '2019-04-2', 90, 1.77, 'El paciente sufre de falta de sueño', 'El paciente presenta dolores de cabeza y nauseas'),
+(17, 3, 1, NULL, '2019-04-02', 90, 1.77, 'El paciente sufre de falta de sueño', 'El paciente presenta dolores de cabeza y nauseas'),
 (18, 3, 3, NULL, '2019-07-19', 90, 1.77, 'El paciente no sufre de nada', 'El paciente presenta dolores en la muñeca'),
 (19, 3, 1, NULL, '2019-11-15', 90, 1.77, 'El paciente sufre de un esguince cervical y lumbagia', 'El paciente presenta inhabilidad para caminar o moverse sin sentir dolor'),
 (20, 3, 2, NULL, '2020-01-15', 90, 1.77, 'El paciente no sufre de nada', 'El paciente presenta mareos');
@@ -1268,6 +1271,9 @@ VALUES (492, 6, '1990-01-01', 'Terapia cognitiva 6 meses'),
 -- agergar antecedentes familiares
 INSERT INTO antecedenteFamiliar (historialPacienteID, historialFamiliarID, parentesco)
 VALUES (1, 5, 'Padre'),
+(1, 6, 'Abuelo materno'),
+(3, 7, 'Padre'),
+(3, 8, 'Madre');
 (1, 6, 'Abuelo materno'),
 (3, 7, 'Padre'),
 (3, 8, 'Madre');
