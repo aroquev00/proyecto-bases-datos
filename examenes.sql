@@ -3,15 +3,17 @@ DELETE FROM pregunta;
 DELETE FROM instanciaExamen;
 DELETE FROM examen;
 
---agregar los exámenes
-INSERT INTO examen VALUES
-(1, 'Examen Depresion', '2020-01-23'),
-(2, 'Examen Ansiedad', '2020-01-23');
- 
- --agregar preguntas de los exámenes
- INSERT INTO PREGUNTA VALUES
+-- agregar los exámenes
 
- --primer examen
+INSERT INTO examen VALUES
+(1, 'Examen Depresion', '2019-01-01'),
+(2, 'Examen Ansiedad', '2019-01-01');
+
+ -- agregar preguntas de los exámenes
+
+ INSERT INTO pregunta VALUES
+
+ -- primer examen (Depresión)
 
  ('1A','1','1','Sentimientos de culpa', NULL),
  ('1B','2','1',  'Suicidio', NULL),
@@ -32,7 +34,7 @@ INSERT INTO examen VALUES
  ('1O','15','1', 'Perdida de peso', NULL),
  ('1P','16','1', 'Introspeccion', 'insight'),
 
- --segundo examen
+ -- segundo examen (Ansiedad)
 
  ('2A', '1','2','Estado de animo ansioso','Preocupaciones, anticipacion de lo peor, aprension (anticipacion temerosa), irritabilidad'),
  ('2B','2','2','Tension','Sensación de tensión, imposibilidad de relajarse, reacciones con sobresalto, llanto fácil, temblores, sensación de inquietud'),
@@ -45,7 +47,7 @@ INSERT INTO examen VALUES
  ('2H','8','2','Síntomas somáticos generales (sensoriales)','Zumbidos de oídos, visión borrosa, sofocos y escalofríos, sensación de debilidad, sensación de hormigueo.'),
  ('2I','9','2','Síntomas cardiovasculares','Taquicardia, palpitaciones, dolor en el pecho, latidos vasculares, sensación de desmayo, extrasístole.'),
  ('2J','10','2','Síntomas respiratorios','Opresión o constricción en el pecho, sensación de ahogo, suspiros, disnea.'),
- ('2K','11','2','Síntomas gastrointestinales','Dificultad para tragar, gases, dispepsia: dolor antes y después de comer, sensación de ardor, sensación de estómago lleno, 
+ ('2K','11','2','Síntomas gastrointestinales','Dificultad para tragar, gases, dispepsia: dolor antes y después de comer, sensación de ardor, sensación de estómago lleno,
  vómitos acuosos, vómitos, sensación de estómago vacío, digestión lenta, borborigmos (ruido intestinal), diarrea, pérdida de peso, estreñimiento.'),
  ('2L','12','2','Síntomas genitourinarios','Micción frecuente, micción urgente, amenorrea, menorragia, aparición de la frigidez, eyaculación precoz,
 ausencia de erección, impotencia'),
@@ -54,19 +56,22 @@ ausencia de erección, impotencia'),
 fruncido, cara tirante, aumento del tono muscular, suspiros, palidez facial. Tragar saliva, eructar, taquicardia de reposo, frecuencia respiratoria por encima de 20 res/min, sacudidas
 enérgicas de tendones, temblor, pupilas dilatadas,exoftalmos (proyección anormal del globo del ojo), sudor,tics en los párpados.');
 
---agregar instancia de exámenes
-INSERT INTO instanciaExamen VALUES
-(100,1,1,'2020-01-23'),
-(101,2,2,'2020-01-23'),
-(102,2,6,'2020-01-23'),
-(103,1,7,'2020-01-23'),
-(104,1,11,'2020-01-23'),
-(105,2,12,'2020-01-23'),
-(106,2,16,'2020-01-23'),
-(107,1,17,'2020-01-23');
+-- agregar instancia de exámenes
 
---agregar respuestas de dos instancias (104 y 105) faltan las otras
-INSERT INTO RESPUESTA VALUES
+INSERT INTO instanciaExamen VALUES
+(100,1,1,'2019-01-27'),
+(102,2,6,'2020-02-27'),
+(104,1,11,'2019-01-03'),
+(105,2,12,'2019-03-23'),
+(106,2,16,'2019-01-17'),
+(107,1,17,'2019-04-02');
+
+-- agregar respuestas de dos instancias (104 y 105) faltan las otras
+
+INSERT INTO respuesta VALUES
+
+-- Respuestas Erick
+
 (401,'1A',104 ,2),
 (402,'1B',104 ,2),
 (403,'1C',104 ,2),
@@ -83,12 +88,13 @@ INSERT INTO RESPUESTA VALUES
 (414,'1N',104 ,2),
 (415,'1O',104 ,2),
 (416,'1P',104 ,2),
+
 (417,'2A',105 ,2),
 (418,'2B',105 ,2),
 (419,'2C',105 ,2),
 (420,'2D',105 ,2),
 (421,'2E',105 ,2),
-(422,'2F',105,2),
+(422,'2F',105 ,2),
 (423,'2G',105 ,2),
 (424,'2H',105 ,2),
 (425,'2I',105 ,2),
@@ -96,4 +102,74 @@ INSERT INTO RESPUESTA VALUES
 (427,'2K',105 ,2),
 (428,'2L',105 ,2),
 (429,'2M',105 ,2),
-(430,'2N',105 ,2);	
+(430,'2N',105 ,2),
+
+-- Respuestas Armando
+
+(431,'1A',100 ,3),
+(432,'1B',100 ,2),
+(433,'1C',100 ,2),
+(434,'1D',100 ,3),
+(435,'1E',100 ,0),
+(436,'1F',100 ,1),
+(437,'1G',100 ,1),
+(438,'1H',100 ,4),
+(439,'1I',100 ,2),
+(440,'1J',100 ,1),
+(441,'1K',100 ,2),
+(442,'1L',100 ,1),
+(443,'1M',100 ,0),
+(444,'1N',100 ,3),
+(445,'1O',100 ,4),
+(446,'1P',100 ,4),
+
+-- Respuestas Emilio
+
+(447,'2A',102 ,1),
+(448,'2B',102 ,2),
+(449,'2C',102 ,0),
+(450,'2D',102 ,3),
+(451,'2E',102 ,2),
+(452,'2F',102 ,2),
+(453,'2G',102 ,2),
+(454,'2H',102 ,3),
+(455,'2I',102 ,3),
+(456,'2J',102 ,1),
+(457,'2K',102 ,3),
+(458,'2L',102 ,4),
+(459,'2M',102 ,3),
+(460,'2N',102 ,0),
+
+-- Respuestas Nestor
+
+(461,'2A',106 ,4),
+(462,'2B',106 ,1),
+(463,'2C',106 ,0),
+(464,'2D',106 ,3),
+(465,'2E',106 ,2),
+(466,'2F',106 ,0),
+(467,'2G',106 ,1),
+(468,'2H',106 ,3),
+(469,'2I',106 ,0),
+(470,'2J',106 ,2),
+(471,'2K',106 ,2),
+(472,'2L',106 ,4),
+(473,'2M',106 ,2),
+(474,'2N',106 ,1),
+
+(475,'1A',107 ,2),
+(476,'1B',107 ,1),
+(477,'1C',107 ,2),
+(478,'1D',107 ,3),
+(479,'1E',107 ,2),
+(480,'1F',107 ,4),
+(481,'1G',107 ,0),
+(482,'1H',107 ,1),
+(483,'1I',107 ,3),
+(484,'1J',107 ,2),
+(485,'1K',107 ,2),
+(486,'1L',107 ,0),
+(487,'1M',107 ,1),
+(488,'1N',107 ,4),
+(489,'1O',107 ,2),
+(490,'1P',107 ,3);
