@@ -275,53 +275,53 @@ END;
 DROP PROCEDURE IF EXISTS pacientesQueHanPadecidoEnfermedad;
 CREATE PROCEDURE pacientesQueHanPadecidoEnfermedad(IN e_DSM5 VARCHAR(500), IN e_codigo VARCHAR(10), IN e_ID INT)
 BEGIN
-    SELECT pacienteID AS Paciente
-    FROM  enfermedad E
-    JOIN enfermedadPrevia F on E.enfermedadID = F.enfermedadID
-    JOIN historial H on F.historialID =  H.historialID
-    JOIN paciente P on H.pacienteID = P.pacienteID
+    SELECT E.enfermedadID, IFNULL(E.ICD9CM, 'No definido') AS ICD9CM, IFNULL(E.ICD10M, 'No definido') AS ICD10CM, E.DSM5, p.pacienteID, CONCAT(nombrePaciente, ' ', apellidoPaternoPaciente, ' ', apellidoMaternoPaciente) AS nombrePaciente, TIMESTAMPDIFF(year, fechaNacimientoPaciente, fechaConsulta) AS edadAlDiagnosticar, generoPaciente, c.fechaConsulta AS fechaDiagnostico
+    FROM enfermedad E
+    JOIN consultaDiagnosticaEnfermedad cDE on E.enfermedadID = cDE.enfermedadID
+    JOIN consulta c on cDE.consultaID = c.consultaID
+    JOIN paciente p on c.pacienteID = p.pacienteID
     WHERE CASE
         WHEN e_DSM5 = '' THEN e_codigo = E.ICD9CM OR e_codigo = E.ICD10M OR E.enfermedadID = e_ID
         ELSE E.DSM5 LIKE CONCAT('%', e_DSM5, '%') OR e_codigo = E.ICD9CM OR e_codigo = E.ICD10M OR E.enfermedadID = e_ID
     END;
 END;
 
--- 10. Desplegar pacientes que no tiene seguro
+-- 10. Desplegar pacientes que no tienen seguro
 DROP PROCEDURE IF EXISTS pacientesSinSeguro;
 CREATE PROCEDURE pacientesSinSeguro()
 BEGIN
-    SELECT pacienteID, CONCAT(nombrePaciente, apellidoPaternoPaciente, apellidoMaternoPaciente), fechaNacimientoPaciente, generoPaciente, telefonoPaciente, CONCAT(P.callePaciente, ', Col. ', P.coloniaPaciente, ', ', P.ciudadPaciente) AS direccionPaciente
+    SELECT P.pacienteID, CONCAT(nombrePaciente, ' ', apellidoPaternoPaciente, ' ', apellidoMaternoPaciente) AS nombrePaciente, fechaNacimientoPaciente, generoPaciente, telefonoPaciente, CONCAT(P.callePaciente, ', Col. ', P.coloniaPaciente, ', ', P.ciudadPaciente) AS direccionPaciente
     FROM paciente P
-    JOIN seguroMedico S on P.pacienteID = S.pacienteID
-    WHERE NOT EXISTS (SELECT numeroPoliza FROM seguroMedico WHERE P.pacienteID = S.pacienteID);
+    LEFT JOIN seguroMedico S on P.pacienteID = S.pacienteID
+    WHERE S.pacienteID IS NULL;
 END;
 
--- 11.Desplegar pacientes que tienen cierto seguro
+-- 11. Desplegar pacientes que tienen cierto seguro
 DROP PROCEDURE IF EXISTS pacientesPorSeguro;
 CREATE PROCEDURE pacientesPorSeguro(IN compania VARCHAR(100))
 BEGIN
-    SELECT pacienteID, CONCAT(nombrePaciente, apellidoPaternoPaciente, apellidoMaternoPaciente), fechaNacimientoPaciente, TIMESTAMPDIFF(year, fechaNacimientoPaciente, current_date) AS edad, generoPaciente, telefonoPaciente, S.numeroPoliza, S.vigenciaSeguroMedico
+    SELECT P.pacienteID, CONCAT(nombrePaciente, ' ', apellidoPaternoPaciente, ' ', apellidoMaternoPaciente) AS nombrePaciente, fechaNacimientoPaciente, TIMESTAMPDIFF(year, fechaNacimientoPaciente, current_date) AS edad, generoPaciente, telefonoPaciente, S.companiaSeguroMedico AS compania, S.numeroPoliza, S.vigenciaSeguroMedico, CONCAT(P.callePaciente, ', Col. ', P.coloniaPaciente, ', ', P.ciudadPaciente) AS direccionPaciente
     FROM paciente P
     JOIN seguroMedico S on P.pacienteID = S.pacienteID
-    WHERE S.companiaSeguroMedico = compania;
+    WHERE S.companiaSeguroMedico LIKE CONCAT('%', compania, '%');
 END;
 
 -- 12. Desplegar los pacientes por ciudad
 DROP PROCEDURE IF EXISTS pacientesPorCiudad;
 CREATE PROCEDURE pacientesPorCiudad(IN ciudad varchar(100))
 BEGIN
-    SELECT CONCAT(nombrePaciente, ' ', apellidoPaternoPaciente, ' ', apellidoMaternoPaciente) AS nombreDelPaciente, fechaNacimientoPaciente, TIMESTAMPDIFF(year, fechaNacimientoPaciente, current_date) AS edad, tipoSangrePaciente, CONCAT(P.callePaciente, ', Col. ', P.coloniaPaciente, ', ', P.ciudadPaciente) AS direccionPaciente
-    FROM paciente
+    SELECT P.pacienteID, CONCAT(nombrePaciente, ' ', apellidoPaternoPaciente, ' ', apellidoMaternoPaciente) AS nombrePaciente, fechaNacimientoPaciente, TIMESTAMPDIFF(year, fechaNacimientoPaciente, current_date) AS edad, tipoSangrePaciente, CONCAT(P.callePaciente, ', Col. ', P.coloniaPaciente, ', ', P.ciudadPaciente) AS direccionPaciente, telefonoPaciente
+    FROM paciente P
     WHERE ciudadPaciente LIKE CONCAT('%', ciudad, '%')
-    ORDER BY nombreDelPaciente;
+    ORDER BY direccionPaciente;
 END;
 
 -- 13. Desplegar los pacientes por edad
 DROP PROCEDURE IF EXISTS pacientesPorEdad;
 CREATE PROCEDURE pacientesPorEdad(IN edad int)
 BEGIN
-    SELECT pacienteID, CONCAT(nombrePaciente, ' ', apellidoPaternoPaciente, ' ', apellidoMaternoPaciente) AS nombreDelPaciente, fechaNacimientoPaciente, TIMESTAMPDIFF(year, fechaNacimientoPaciente, current_date) AS edad, tipoSangrePaciente
-    FROM paciente
+    SELECT P.pacienteID, CONCAT(nombrePaciente, ' ', apellidoPaternoPaciente, ' ', apellidoMaternoPaciente) AS nombreDelPaciente, fechaNacimientoPaciente, TIMESTAMPDIFF(year, fechaNacimientoPaciente, current_date) AS edad, tipoSangrePaciente, CONCAT(P.callePaciente, ', Col. ', P.coloniaPaciente, ', ', P.ciudadPaciente) AS direccionPaciente, telefonoPaciente
+    FROM paciente P
     WHERE TIMESTAMPDIFF(year, fechaNacimientoPaciente, current_date) = edad
     ORDER BY fechaNacimientoPaciente DESC;
 END;
@@ -330,8 +330,8 @@ END;
 DROP PROCEDURE IF EXISTS pacientesPorSangre;
 CREATE PROCEDURE pacientesPorSangre(IN sangre varchar(10))
 BEGIN
-    SELECT pacienteID, CONCAT(nombrePaciente, ' ', apellidoPaternoPaciente, ' ', apellidoMaternoPaciente) AS nombreDelPaciente, fechaNacimientoPaciente, TIMESTAMPDIFF(year, fechaNacimientoPaciente, current_date) AS edad
-    FROM paciente
+    SELECT P.pacienteID, CONCAT(nombrePaciente, ' ', apellidoPaternoPaciente, ' ', apellidoMaternoPaciente) AS nombreDelPaciente, fechaNacimientoPaciente, TIMESTAMPDIFF(year, fechaNacimientoPaciente, current_date) AS edad, tipoSangrePaciente, CONCAT(P.callePaciente, ', Col. ', P.coloniaPaciente, ', ', P.ciudadPaciente) AS direccionPaciente, telefonoPaciente
+    FROM paciente P
     WHERE tipoSangrePaciente = sangre
     ORDER BY tipoSangrePaciente;
 END;
@@ -387,4 +387,3 @@ BEGIN
 
     COMMIT;
 END;
-
