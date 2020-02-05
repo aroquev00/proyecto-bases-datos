@@ -1,19 +1,22 @@
-DELETE FROM medicamento;
-DELETE FROM enfermedad;
-DELETE FROM paciente;
-DELETE FROM historial;
-DELETE FROM doctor;
-DELETE FROM seguroMedico;
-DELETE FROM consulta;
+DELETE FROM respuesta;
+DELETE FROM instanciaExamen;
+DELETE FROM pregunta;
+DELETE FROM examen;
+DELETE FROM antecedenteFamiliar;
+DELETE FROM enfermedadPrevia;
 DELETE FROM consultaRecetaMedicamento;
 DELETE FROM consultaDiagnosticaEnfermedad;
-DELETE FROM enfermedadPrevia;
-DELETE FROM antecedenteFamiliar;
-DELETE FROM examen;
-DELETE FROM historialTieneExamen;
-DELETE FROM pregunta;
-DELETE FROM posibleRespuestas;
-DELETE FROM respuesta;
+DELETE FROM consulta;
+DELETE FROM seguroMedico;
+DELETE FROM historial;
+DELETE FROM paciente;
+DELETE FROM medicamento;
+DELETE FROM enfermedad;
+DELETE FROM doctor;
+
+
+
+
 
 -- cada uno un paciente, cada paciente 5 consultas, 3 deben tener dos enfermedades y dos medicamentos
 
@@ -1156,15 +1159,15 @@ VALUES (1, 'C1', 'Juan', 'Perez', 'Nutriologo'),
 (3, 'C3', 'Ruben', 'Lopez', 'Pediatra');
 
 -- crear pacientes
-INSERT INTO paciente (pacienteID, nombrePaciente, apellidoPaternoPaciente, apellidoMaternoPaciente, fechaNacimientoPaciente, generoPaciente, tipoSangrePaciente, callePaciente, coloniaPaciente, ciudadPaciente, telefonoPaciente)
-VALUES (1, 'Armando', 'Roque', 'Villasana', '2000-05-13', 'M', 'O+', 'Ricardo Margain 444', 'Zona Campestre', 'San Pedro', '8100000000'),
-(2, 'Emilio', 'Villarreal', 'Flores', '1998-10-11', 'M', 'B+', 'Av.Roberto Gatza Sada 150', 'Lomas del Valle', 'San Pedro', '8183096093'),
-(3, 'Nestor', 'Rubio', 'Lopez', '1998-06-29', 'M', 'O+', 'Av. Alvaro Obregon 2500 sur', 'Lomas del Bosque',  'Culiacan', '6679968980'),
-(4, 'Erick', 'Hernandez', 'Vallejo', '1999-03-15', 'M', 'B-', 'Rio de Janeiro 330', 'Alta Vista', 'Monterrey', '8688207790'),
-(5, 'Armando', 'Roque', 'Rodriguez', '1972-09-06', 'M', 'O+', 'Ricardo Margain 444', 'Zona Campestre', 'San Pedro', '8111111111'),
-(6, 'José', 'Villasana', 'Rosas', '1949-11-05', 'M', 'A+', 'Heimstrasse 10', 'Kreuzberg', 'Berlin', '4910101010'),
-(7, 'Jose', 'Rubio', 'Luque', '1961-12-27', 'M', 'A+', 'Av. Alvaro Obregon 2500', 'Lomas del Bosque', 'Culiacan', '6671820303'),
-(8, 'Indelisa', 'Lopez', 'Verdugo', '1962-07-04', 'F', 'B-', 'Av. Alvaro Obregon 2500', 'Lomas del Bosque', 'Culiacan', '6671820303');
+INSERT INTO paciente (pacienteID, nombrePaciente, apellidoPaternoPaciente, apellidoMaternoPaciente, fechaNacimientoPaciente, generoPaciente, tipoSangrePaciente, callePaciente, coloniaPaciente, ciudadPaciente, telefonoPaciente, emailPaciente)
+VALUES (1, 'Armando', 'Roque', 'Villasana', '2000-05-13', 'M', 'O+', 'Ricardo Margain 444', 'Zona Campestre', 'San Pedro', '8100000000', 'A01138717@itesm.mx'),
+(2, 'Emilio', 'Villarreal', 'Flores', '1998-10-11', 'M', 'B+', 'Av.Roberto Gatza Sada 150', 'Lomas del Valle', 'San Pedro', '8183096093', 'emilio.villarrealf@gmail.com'),
+(3, 'Nestor', 'Rubio', 'Lopez', '1998-06-29', 'M', 'O+', 'Av. Alvaro Obregon 2500 sur', 'Lomas del Bosque',  'Culiacan', '6679968980', 'nestorulo29@gmail.com'),
+(4, 'Erick', 'Hernandez', 'Vallejo', '1999-03-15', 'M', 'B-', 'Rio de Janeiro 330', 'Alta Vista', 'Monterrey', '8688207790', 'a00517124@itesm.mx'),
+(5, 'Armando', 'Roque', 'Rodriguez', '1972-09-06', 'M', 'O+', 'Ricardo Margain 444', 'Zona Campestre', 'San Pedro', '8111111111', 'armando@biccos.com'),
+(6, 'José', 'Villasana', 'Rosas', '1949-11-05', 'M', 'A+', 'Heimstrasse 10', 'Kreuzberg', 'Berlin', '4910101010', 'jlvr@hotmail.com'),
+(7, 'Jose', 'Rubio', 'Luque', '1961-12-27', 'M', 'A+', 'Av. Alvaro Obregon 2500', 'Lomas del Bosque', 'Culiacan', '6671820303', 'jose@fanes.com.mx'),
+(8, 'Indelisa', 'Lopez', 'Verdugo', '1962-07-04', 'F', 'B-', 'Av. Alvaro Obregon 2500', 'Lomas del Bosque', 'Culiacan', '6671820303', 'inde545@hotmail.com');
 
 -- crear historiales de los pacientes
 INSERT INTO historial (historialID, pacienteID, fechaUltimaConsulta, fechaUltimaActualizacion, horasEjercicio, fumador, tomador, horasSuenio, calidadSuenio)
@@ -1198,27 +1201,27 @@ VALUES (1, 1, 1, '87923618', '2019-01-27', 62, 1.7, 'El paciente sufre de altos 
 
 -- consultas de Emilio
 INSERT INTO consulta (consultaID, pacienteID, doctorID, numeroPoliza, fechaConsulta, pesoEnConsulta, estaturaEnConsulta, notaClinica, peea)
-VALUES (6, 2, 1, NULL, '2019-02-27', 60, 1.7, 'nC 6', 'peea 6'),
-(7, 2, 2, NULL, '2019-04-07', 61, 1.7, 'nC 7', 'peea 7'),
-(8, 2, 3, NULL, '2019-01-20', 60, 1.7, 'nC 8', 'peea 8'),
-(9, 2, 2, NULL, '2019-10-09', 60, 1.7, 'nC 9', 'peea 9'),
-(10, 2, 1, NULL, '2020-11-24', 59, 1.7, 'nC 10', 'peea 10');
+VALUES (6, 2, 1, NULL, '2019-02-27', 60, 1.7, 'El paciente sufre de altos niveles de ansiedad', 'El paciente presenta dolor de cabeza y nauseas'),
+(7, 2, 2, NULL, '2019-04-07', 61, 1.7, 'El paciente sufre de pocos niveles de nauseas', 'El paciente presenta dolor de cabeza y falta de apetito'),
+(8, 2, 3, NULL, '2019-01-20', 60, 1.7, 'El paciente sufre de altos niveles de estres', 'El paciente presenta dolor de cabeza'),
+(9, 2, 2, NULL, '2019-10-09', 60, 1.7,'El paciente sufre de ansiedad', 'El paciente presenta dolor de cabeza, nauseas y dolor en el estomago'),
+(10, 2, 1, NULL, '2020-11-24', 59, 1.7, 'El paciente sufre de altos niveles de dolor de cabeza', 'El paciente presenta dolor en toda el area de la cabeza');
 
 -- consultas de Erick
 INSERT INTO consulta (consultaID, pacienteID, doctorID, numeroPoliza, fechaConsulta, pesoEnConsulta, estaturaEnConsulta, notaClinica, peea)
-VALUES (11, 4, 1, NULL, '2019-01-03', 65, 1.8, 'nC 11', 'peea 11'),
-(12, 4, 2, NULL, '2019-03-23', 65, 1.8, 'nC 12', 'peea 12'),
-(13, 4, 3, NULL, '2019-06-19', 64, 1.8, 'nC 13', 'peea 13'),
-(14, 4, 2, NULL, '2019-11-10', 65, 1.8, 'nC 14', 'peea 14'),
-(15, 4, 1, NULL, '2020-01-15', 65, 1.8, 'nC 15', 'peea 15');
+VALUES (11, 4, 1, NULL, '2019-01-03', 65, 1.8, 'El paciente presenta señales de insomnio, se le recomendaron cambios en su rutina', 'El paciente presenta problemas para conciliar el sueño desde hace dos meses'),
+(12, 4, 2, NULL, '2019-03-23', 65, 1.8, 'El paciente presenta señales de TAG, se recomendaron cambios en su rutina. Se le dara seguimiento.', 'El paciente tiene dificultades para conecentrarse en una tarea ademas esta en un estado de alerta constante'),
+(13, 4, 3, NULL, '2019-06-19', 64, 1.8, 'El paciente presenta otros sintomas de TAG, se recetaron medicamentos', 'El paciente tiene nauseas y dolor de cabeza constantes desde hace 3 semanas'),
+(14, 4, 2, NULL, '2019-11-10', 65, 1.8, 'El paciente no presento una mejora considerable, se recomendo asistir al psicologo', 'El paciente presenta presenta dificultades para conciliar el sueño y nauseas constantes'),
+(15, 4, 1, NULL, '2020-01-15', 65, 1.8, 'El paciente se encuentra en mejor estado de salud, se seguira con el tratamiento', 'El paciente presenta ligero dolor de cabeza');
 
 -- consultas de Nestor
 INSERT INTO consulta (consultaID, pacienteID, doctorID, numeroPoliza, fechaConsulta, pesoEnConsulta, estaturaEnConsulta, notaClinica, peea)
-VALUES (16, 3, 1, NULL, '2019-01-17', 90, 1.77, 'nC 16', 'peea 16'),
-(17, 3, 1, NULL, '2019-04-2', 90, 1.77, 'nC 17', 'peea 17'),
-(18, 3, 3, NULL, '2019-07-19', 90, 1.77, 'nC 18', 'peea 18'),
-(19, 3, 1, NULL, '2019-11-15', 90, 1.77, 'nC 19', 'peea 19'),
-(20, 3, 2, NULL, '2020-01-15', 90, 1.77, 'nC 20', 'peea 20');
+VALUES (16, 3, 1, NULL, '2019-01-17', 90, 1.77, 'El paciente sufre de estreñimiento y dolores abdominales', 'El paciente sufre de molestias al hacer del baño'),
+(17, 3, 1, NULL, '2019-04-02', 90, 1.77, 'El paciente sufre de falta de sueño', 'El paciente presenta dolores de cabeza y nauseas'),
+(18, 3, 3, NULL, '2019-07-19', 90, 1.77, 'El paciente no sufre de nada', 'El paciente presenta dolores en la muñeca'),
+(19, 3, 1, NULL, '2019-11-15', 90, 1.77, 'El paciente sufre de un esguince cervical y lumbagia', 'El paciente presenta inhabilidad para caminar o moverse sin sentir dolor'),
+(20, 3, 2, NULL, '2020-01-15', 90, 1.77, 'El paciente no sufre de nada', 'El paciente presenta mareos');
 
 
 
@@ -1271,6 +1274,12 @@ VALUES (1, 5, 'Padre'),
 (1, 6, 'Abuelo materno'),
 (3, 7, 'Padre'),
 (3, 8, 'Madre');
-
-
--- agregar lo de los exámenes psicológicos
+(1, 6, 'Abuelo materno'),
+(3, 7, 'Padre'),
+(3, 8, 'Madre');
+(1, 6, 'Abuelo materno'),
+(3, 7, 'Padre'),
+(3, 8, 'Madre');
+(1, 6, 'Abuelo materno'),
+(3, 7, 'Padre'),
+(3, 8, 'Madre');

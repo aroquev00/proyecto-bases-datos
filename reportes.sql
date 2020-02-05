@@ -72,7 +72,34 @@ BEGIN
 END;
 
 -- 1.5 Resultados de exámenes
--- FALTA
+DROP PROCEDURE IF EXISTS resultadosExamenesGeneral;
+CREATE PROCEDURE resultadosExamenesGeneral(IN p_nombre VARCHAR(100), IN p_ID INT)
+BEGIN
+    SELECT P.pacienteID, C.consultaID, IE.instanciaID, IE.examenID, e.tipoExamen, IE.fechaPresentado, SUM(respuesta) AS Resultado,
+           CASE
+              WHEN e.tipoExamen = 'Examen Depresion' THEN (CASE
+                  WHEN SUM(respuesta) <= 7 THEN 'Normal range'
+                  WHEN SUM(respuesta) > 7 AND SUM(respuesta) < 20 THEN 'Mild to moderate depression'
+                  ELSE 'Severe depression'
+                  END)
+              ELSE (CASE
+                  WHEN SUM(respuesta) < 17 THEN 'Mild anxiety'
+                  WHEN SUM(respuesta) >= 17 AND SUM(respuesta) <= 24 THEN 'Moderate anxiety'
+                  ELSE 'Severe anxiety'
+              END)
+          END AS evaluacion
+    FROM paciente AS P
+    JOIN consulta AS C ON P.pacienteID=C.pacienteID
+    JOIN instanciaExamen AS IE ON C.consultaID=IE.consultaID
+    JOIN respuesta AS R ON R.instanciaID=IE.instanciaID
+    JOIN examen e on IE.examenID = e.examenID
+    WHERE CASE
+        WHEN p_nombre = '' THEN P.pacienteID = p_ID
+        ELSE CONCAT(P.nombrePaciente, ' ', P.apellidoPaternoPaciente, ' ', P.apellidoMaternoPaciente) LIKE CONCAT('%', p_nombre, '%') OR P.pacienteID = p_ID
+        END
+    GROUP BY P.pacienteID, C.consultaID, IE.instanciaID, IE.examenID, e.tipoExamen, IE.fechaPresentado;
+END;
+
 
 
 -- 1.6 Antecedentes familiares
@@ -95,15 +122,75 @@ BEGIN
 END;
 
 -- 2 Detalle de exámenes por paciente
--- FALTA
+DROP PROCEDURE IF EXISTS reporteExamenes;
+CREATE PROCEDURE reporteExamenes(IN p_nombre VARCHAR(100), IN p_ID INT)
+BEGIN
+    SELECT P.pacienteID, CONCAT(P.nombrePaciente, ' ', P.apellidoPaternoPaciente, ' ', P.apellidoMaternoPaciente) AS nombrePaciente, C.consultaID, d.nombreDoctor, IE.instanciaID, e.examenID, e.tipoExamen, IE.fechaPresentado, SUM(respuesta) AS Resultado,
+           CASE
+              WHEN e.tipoExamen = 'Examen Depresion' THEN (CASE
+                  WHEN SUM(respuesta) <= 7 THEN 'Normal range'
+                  WHEN SUM(respuesta) > 7 AND SUM(respuesta) < 20 THEN 'Mild to moderate depression'
+                  ELSE 'Severe depression'
+                  END)
+              ELSE (CASE
+                  WHEN SUM(respuesta) < 17 THEN 'Mild anxiety'
+                  WHEN SUM(respuesta) >= 17 AND SUM(respuesta) <= 24 THEN 'Moderate anxiety'
+                  ELSE 'Severe anxiety'
+              END)
+          END AS evaluacion
+    FROM paciente AS P
+    JOIN consulta AS C ON P.pacienteID=C.pacienteID
+    JOIN doctor d on C.doctorID = d.doctorID
+    JOIN instanciaExamen AS IE ON C.consultaID=IE.consultaID
+    JOIN respuesta AS R ON R.instanciaID=IE.instanciaID
+    JOIN examen e on IE.examenID = e.examenID
+    WHERE CASE
+        WHEN p_nombre = '' THEN P.pacienteID = p_ID
+        ELSE CONCAT(P.nombrePaciente, ' ', P.apellidoPaternoPaciente, ' ', P.apellidoMaternoPaciente) LIKE CONCAT('%', p_nombre, '%') OR P.pacienteID = p_ID
+        END
+    GROUP BY P.pacienteID, C.consultaID, d.nombreDoctor, IE.instanciaID, e.examenID, e.tipoExamen, IE.fechaPresentado;
+END;
 
--- 2.1 Detalle de un examen específico, con sus preguntas y resultados
--- FALTA
+-- 2.1.1. Detalle de un examen específico, con sus preguntas y resultados
+DROP PROCEDURE IF EXISTS reporteExamenBusqueda;
+CREATE PROCEDURE reporteExamenBusqueda(IN e_instanciaID INT)
+BEGIN
+    SELECT P.pacienteID, CONCAT(P.nombrePaciente, ' ', P.apellidoPaternoPaciente, ' ', P.apellidoMaternoPaciente) AS nombrePaciente, C.consultaID, CONCAT(d.nombreDoctor, ' ', d.apellidoDoctor) AS nombreDoctor, IE.instanciaID, IE.examenID, e.tipoExamen, IE.fechaPresentado, SUM(respuesta) AS Resultado,
+           CASE
+              WHEN e.tipoExamen = 'Examen Depresion' THEN (CASE
+                  WHEN SUM(respuesta) <= 7 THEN 'Normal range'
+                  WHEN SUM(respuesta) > 7 AND SUM(respuesta) < 20 THEN 'Mild to moderate depression'
+                  ELSE 'Severe depression'
+                  END)
+              ELSE (CASE
+                  WHEN SUM(respuesta) < 17 THEN 'Mild anxiety'
+                  WHEN SUM(respuesta) >= 17 AND SUM(respuesta) <= 24 THEN 'Moderate anxiety'
+                  ELSE 'Severe anxiety'
+              END)
+          END AS evaluacion
+    FROM paciente AS P
+    JOIN consulta AS C ON P.pacienteID=C.pacienteID
+    JOIN doctor d on C.doctorID = d.doctorID
+    JOIN instanciaExamen AS IE ON C.consultaID=IE.consultaID
+    JOIN respuesta AS R ON R.instanciaID=IE.instanciaID
+    JOIN examen e on IE.examenID = e.examenID
+    WHERE IE.instanciaID = e_instanciaID
+    GROUP BY P.pacienteID, C.consultaID, d.nombreDoctor, IE.examenID, e.tipoExamen, IE.fechaPresentado;
+END;
 
--- Resto de queries (ponerse creativos)
+-- 2.1.2. Preguntas y resultados
+DROP PROCEDURE IF EXISTS detallePreguntasExamenBusqueda;
+CREATE PROCEDURE detallePreguntasExamenBusqueda(IN e_instanciaID INT)
+BEGIN
+  SELECT p.preguntaID, p.pregunta, IFNULL(p.descripcion, '') AS descripcion, r.respuesta, r.respuestaID
+  FROM instanciaExamen iE
+  JOIN respuesta r ON iE.instanciaID = r.instanciaID
+  JOIN pregunta p ON r.preguntaID = p.preguntaID
+  WHERE iE.instanciaID = e_instanciaID;
+END;
 
 -- 3. Lista de pacientes con su número de consultas
-DROP procedure IF EXISTS numeroConsultasPaciente;
+DROP PROCEDURE IF EXISTS numeroConsultasPaciente;
 CREATE PROCEDURE numeroConsultasPaciente()
 BEGIN
     SELECT CONCAT(nombrePaciente, ' ', apellidoPaternoPaciente, ' ', apellidoMaternoPaciente) AS nombrePaciente, TIMESTAMPDIFF(year, fechaNacimientoPaciente, CURDATE()) AS edadPaciente, COUNT(consultaID) AS numeroConsultas, H.fechaUltimaConsulta
@@ -183,3 +270,121 @@ BEGIN
     GROUP BY E.enfermedadID, E.ICD9CM, E.ICD10M, E.DSM5
     ORDER BY numeroCasos DESC;
 END;
+
+-- 9. Desplegar todos los pacientes que han sufrido ceirta enfermedad por busqueda
+DROP PROCEDURE IF EXISTS pacientesQueHanPadecidoEnfermedad;
+CREATE PROCEDURE pacientesQueHanPadecidoEnfermedad(IN e_DSM5 VARCHAR(500), IN e_codigo VARCHAR(10), IN e_ID INT)
+BEGIN
+    SELECT pacienteID AS Paciente
+    FROM  enfermedad E
+    JOIN enfermedadPrevia F on E.enfermedadID = F.enfermedadID
+    JOIN historial H on F.historialID =  H.historialID
+    JOIN paciente P on H.pacienteID = P.pacienteID
+    WHERE CASE
+        WHEN e_DSM5 = '' THEN e_codigo = E.ICD9CM OR e_codigo = E.ICD10M OR E.enfermedadID = e_ID
+        ELSE E.DSM5 LIKE CONCAT('%', e_DSM5, '%') OR e_codigo = E.ICD9CM OR e_codigo = E.ICD10M OR E.enfermedadID = e_ID
+    END;
+END;
+
+-- 10. Desplegar pacientes que no tiene seguro
+DROP PROCEDURE IF EXISTS pacientesSinSeguro;
+CREATE PROCEDURE pacientesSinSeguro()
+BEGIN
+    SELECT pacienteID, CONCAT(nombrePaciente, apellidoPaternoPaciente, apellidoMaternoPaciente), fechaNacimientoPaciente, generoPaciente, telefonoPaciente, CONCAT(P.callePaciente, ', Col. ', P.coloniaPaciente, ', ', P.ciudadPaciente) AS direccionPaciente
+    FROM paciente P
+    JOIN seguroMedico S on P.pacienteID = S.pacienteID
+    WHERE NOT EXISTS (SELECT numeroPoliza FROM seguroMedico WHERE P.pacienteID = S.pacienteID);
+END;
+
+-- 11.Desplegar pacientes que tienen cierto seguro
+DROP PROCEDURE IF EXISTS pacientesPorSeguro;
+CREATE PROCEDURE pacientesPorSeguro(IN compania VARCHAR(100))
+BEGIN
+    SELECT pacienteID, CONCAT(nombrePaciente, apellidoPaternoPaciente, apellidoMaternoPaciente), fechaNacimientoPaciente, TIMESTAMPDIFF(year, fechaNacimientoPaciente, current_date) AS edad, generoPaciente, telefonoPaciente, S.numeroPoliza, S.vigenciaSeguroMedico
+    FROM paciente P
+    JOIN seguroMedico S on P.pacienteID = S.pacienteID
+    WHERE S.companiaSeguroMedico = compania;
+END;
+
+-- 12. Desplegar los pacientes por ciudad
+DROP PROCEDURE IF EXISTS pacientesPorCiudad;
+CREATE PROCEDURE pacientesPorCiudad(IN ciudad varchar(100))
+BEGIN
+    SELECT CONCAT(nombrePaciente, ' ', apellidoPaternoPaciente, ' ', apellidoMaternoPaciente) AS nombreDelPaciente, fechaNacimientoPaciente, TIMESTAMPDIFF(year, fechaNacimientoPaciente, current_date) AS edad, tipoSangrePaciente, CONCAT(P.callePaciente, ', Col. ', P.coloniaPaciente, ', ', P.ciudadPaciente) AS direccionPaciente
+    FROM paciente
+    WHERE ciudadPaciente LIKE CONCAT('%', ciudad, '%')
+    ORDER BY nombreDelPaciente;
+END;
+
+-- 13. Desplegar los pacientes por edad
+DROP PROCEDURE IF EXISTS pacientesPorEdad;
+CREATE PROCEDURE pacientesPorEdad(IN edad int)
+BEGIN
+    SELECT pacienteID, CONCAT(nombrePaciente, ' ', apellidoPaternoPaciente, ' ', apellidoMaternoPaciente) AS nombreDelPaciente, fechaNacimientoPaciente, TIMESTAMPDIFF(year, fechaNacimientoPaciente, current_date) AS edad, tipoSangrePaciente
+    FROM paciente
+    WHERE TIMESTAMPDIFF(year, fechaNacimientoPaciente, current_date) = edad
+    ORDER BY fechaNacimientoPaciente DESC;
+END;
+
+-- 14. Desplegar los pacientes por tipo de sangre
+DROP PROCEDURE IF EXISTS pacientesPorSangre;
+CREATE PROCEDURE pacientesPorSangre(IN sangre varchar(10))
+BEGIN
+    SELECT pacienteID, CONCAT(nombrePaciente, ' ', apellidoPaternoPaciente, ' ', apellidoMaternoPaciente) AS nombreDelPaciente, fechaNacimientoPaciente, TIMESTAMPDIFF(year, fechaNacimientoPaciente, current_date) AS edad
+    FROM paciente
+    WHERE tipoSangrePaciente = sangre
+    ORDER BY tipoSangrePaciente;
+END;
+
+-- Transaccion para borrar a un paciente
+DROP PROCEDURE IF EXISTS deletePatient;
+CREATE PROCEDURE deletePatient(IN p_name varchar(100), p_apellidoPaterno varchar(100), p_apellidoMaterno varchar(100), IN p_id int)
+BEGIN
+    SELECT @pacienteID := P.pacienteID AS pacienteID, CONCAT(nombrePaciente, ' ', apellidoPaternoPaciente, ' ', apellidoMaternoPaciente) AS nombreDelPacienteABorrar
+    FROM paciente P
+    WHERE P.nombrePaciente = p_name AND P.apellidoPaternoPaciente = p_apellidoPaterno AND P.apellidoMaternoPaciente = p_apellidoMaterno AND P.pacienteID = p_id;
+    START TRANSACTION;
+
+    -- delete all diagnosics
+    DELETE FROM consultaDiagnosticaEnfermedad
+    WHERE consultaID IN (SELECT consultaID FROM consulta WHERE pacienteID = @pacienteID);
+
+    -- delete all medication prescriptions
+    DELETE FROM consultaRecetaMedicamento
+    WHERE consultaID IN (SELECT consultaID FROM consulta WHERE pacienteID = @pacienteID);
+
+    -- delete all visits to doctor
+    DELETE FROM consulta
+    WHERE pacienteID = @pacienteID;
+
+    -- delete all insurance belonging to patient
+    DELETE FROM seguroMedico
+    WHERE pacienteID = @pacienteID;
+
+    -- delete previous sickness
+    DELETE FROM enfermedadPrevia
+    WHERE historialID IN (SELECT historialID FROM historial WHERE pacienteID = @pacienteID);
+
+    -- delete all antecedentes familiares
+    DELETE FROM antecedenteFamiliar
+    WHERE historialFamiliarID IN (SELECT historialID FROM historial WHERE pacienteID = @pacienteID) OR historialPacienteID IN (SELECT historialID FROM historial WHERE pacienteID = @pacienteID);
+
+    -- delete all exam answers
+    DELETE FROM respuesta
+    WHERE instanciaID IN (SELECT instanciaID FROM instanciaExamen WHERE consultaID IN (SELECT consultaID FROM consulta WHERE pacienteID = @pacienteID));
+
+    -- delete all exam instances
+    DELETE FROM instanciaExamen
+    WHERE consultaID IN (SELECT consultaID FROM consulta WHERE pacienteID = @pacienteID);
+
+    -- delete historial
+    DELETE FROM historial
+    WHERE pacienteID = @pacienteID;
+
+    -- delete patient
+    DELETE FROM paciente
+    WHERE pacienteID = @pacienteID;
+
+    COMMIT;
+END;
+

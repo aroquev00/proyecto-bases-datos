@@ -34,7 +34,8 @@ CREATE TABLE paciente(
   callePaciente VARCHAR(30),
   coloniaPaciente VARCHAR(30),
   ciudadPaciente VARCHAR(10),
-  telefonoPaciente VARCHAR(10),
+  telefonoPaciente VARCHAR(100),
+  emailPaciente VARCHAR(100),
   PRIMARY KEY(pacienteID)
 );
 
@@ -133,42 +134,37 @@ CREATE TABLE antecedenteFamiliar (
 CREATE TABLE examen (
 examenID INT,
 tipoExamen VARCHAR(20),
-fechaEmision DateTime,
-nombre VARCHAR(15),
+fechaRegistro Date,
 PRIMARY KEY(examenID)
 ); 
 
-CREATE TABLE historialTieneExamen (
+CREATE TABLE  instanciaExamen(
+instanciaID INT,
 examenID INT,
-historialID INT,
-PRIMARY KEY (examenID, historialID),
+consultaID INT,
+fechaPresentado DATE,
+PRIMARY KEY (instanciaID),
 FOREIGN KEY(examenID) references examen(examenID),
-FOREIGN KEY(historialID) references historial(historialID)
+FOREIGN KEY(consultaID) references consulta(consultaID)
 );
 
 CREATE TABLE pregunta(
-preguntaID INT,
-fechaUltimaEdicion DATE,
+preguntaID VARCHAR(4),
+numPregunta INT,
+examenID INT,
 pregunta VARCHAR(100),
 descripcion VARCHAR(1000),
-PRIMARY KEY (preguntaID)
-);
-
-CREATE TABLE posibleRespuestas(
-preguntaID INT,
-posibleRespuesta VARCHAR(20),
-PRIMARY KEY(preguntaID, posibleRespuesta),
-FOREIGN KEY (preguntaID) references pregunta(preguntaID)
+PRIMARY KEY (preguntaID),
+FOREIGN KEY (examenID) references examen(examenID)
 );
 
 CREATE TABLE respuesta (
 respuestaID INT,
-examenID INT,
-preguntaID INT,
-fechaRespuesta date,
-respuesta VARCHAR(20),
+preguntaID VARCHAR(4),
+instanciaID INT,
+respuesta INT,
 PRIMARY KEY (respuestaID),
-FOREIGN KEY (examenID) references examen(examenID),
-FOREIGN KEY (preguntaID) references pregunta(preguntaID)
+FOREIGN KEY (preguntaID) references pregunta(preguntaID),
+FOREIGN KEY (instanciaID) references instanciaExamen(instanciaID)
 );
 END;
